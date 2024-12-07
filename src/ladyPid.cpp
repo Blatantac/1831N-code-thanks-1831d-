@@ -68,15 +68,5 @@ int LadyMovePID(float target, float timeout, bool async) {
     return (fabs(target - lady_rotation.get_position()) < 0.01) ? 1 : 0;  // Return 1 if target reached, 0 if timed out
 }
 
-
-
-
-
-
-
-
-
-
 // to be called continuously and calculate velocity at state
-// float calculateControlSignal(float error, float kp, float ki, float kd) 
-
+// float calculateControlSignal(float error, float kp, float ki, float kd);

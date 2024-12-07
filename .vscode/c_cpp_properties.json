@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "name": "PROS Project",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/Users/cai_ya/Documents/GitHub/1831-Common-Codebase/include"
+      ],
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "compilerPath": "/Users/cai_ya/Library/Application Support/Code/User/globalStorage/sigbots.pros/install/pros-toolchain-macos/bin/arm-none-eabi-g++",
+      "cStandard": "gnu11",
+      "cppStandard": "gnu++20",
+      "intelliSenseMode": "gcc-arm",
+      "macFrameworkPath": [
+        "/System/Library/Frameworks"
+      ],
+      "browse": {
+        "path": [
+          "/Users/cai_ya/Documents/GitHub/1831-Common-Codebase"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      }
+    }
+  ],
+  "version": 4
+}

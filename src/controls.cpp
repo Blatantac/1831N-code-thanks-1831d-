@@ -44,15 +44,6 @@ void setColorSort() {
     }
 }
 
-void confirmSelection() {
-    static bool pressed = false;
-    pressed = !pressed;
-
-    if (pressed) {
-        allianceConfirmed = true;
-    }
-}
-
 bool ringInspect() {
     const float blue_lim_low = 150, blue_lim_high = 250;
     const float red_lim_low = 0, red_lim_high = 50;
