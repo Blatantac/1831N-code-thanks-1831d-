@@ -46,8 +46,6 @@ void Chassis::arcade(int throttle, int turn, bool disableDriveCurve, float desat
 
 void Chassis::curvature(int throttle, int turn, bool disableDriveCurve) {
     // If we're not moving forwards change to arcade drive
-    turn *= 0.95;
-
     if (throttle == 0) {
         arcade(throttle, turn, disableDriveCurve);
         return;
@@ -73,7 +71,6 @@ void Chassis::curvature(int throttle, int turn, bool disableDriveCurve) {
 }
 
 void Chassis::variableCurvature(int throttle, int turn, double slowFactor, bool disableDriveCurve) {
-    turn *= 0.85;
     // If we're not moving forwards change to arcade drive
     if (throttle == 0) {
         arcade(throttle, turn, disableDriveCurve);

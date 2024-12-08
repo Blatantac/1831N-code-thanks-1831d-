@@ -6,22 +6,30 @@
 #include "pros/motors.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
+#include "pros/optical.hpp"
 #include <sys/wait.h>
+#include "pros/apix.h"
+
+#include "robot-config.hpp"
+#include "controls.hpp"
+#include "auton.hpp"
+#include "coloursort.hpp"
+#include "macros.hpp"
 
 // ---------------------------------------
 // Drivetrain & Chassis
 // ---------------------------------------
 
-pros::MotorGroup leftMotors({-2, -3, -7}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({8, 9, 10}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+pros::MotorGroup leftMotors({-15, -16, -17}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
+pros::MotorGroup rightMotors({20, 19, 18}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
 
 // PID settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              12.8, // 11.6 inch track width
-                              lemlib::Omniwheel::NEW_325, // using new 3"25' omnis
+                              12.6, // 12.6 inch track width
+                              lemlib::Omniwheel::OLD_325, // using old 3"25' omnis
                               450, // drivetrain rpm is 200 (green direct)
-                              8 // horizontal drift is 2. If we had traction wheels, it would have been 8
+                              4 // horizontal drift is 2. If we had traction wheels, it would have been 8
 );
 
 // ---------------------------------------
@@ -30,86 +38,81 @@ lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-pros::Motor roller(1);
-pros::Motor hook(-6);
+pros::Motor intake ({-10}, pros::MotorGearset::blue);
+pros::Motor lady ({3}, pros::MotorGearset::red);
 
-pros::MotorGroup intake({1, -6}, pros::MotorGearset::green); // front 1, back 6
-pros::Motor lady(5);
-pros::adi::DigitalOut mogo_mech (8);
-pros::adi::DigitalOut doinker (7);
-pros::adi::DigitalOut endgame (1);
-// pros::adi::DigitalOut lift ();
+pros::adi::DigitalOut mogo_mech ('H');
+pros::adi::DigitalOut ringSort ('A');
 
 // ---------------------------------------
 // Sensors (Miscellaneous)
 // ---------------------------------------
 
-pros::Imu imu(11);
-pros::Optical colorSort (18);
-pros::Rotation lady_rotation (12);
+pros::Imu imu (5);
+pros::Optical optical (12);
 
 // ---------------------------------------
 // Odometry
 // ---------------------------------------
 
-pros::Rotation horizontal_encoder(13); // Change to the "A" tagged encoder
+pros::Rotation horizontal_encoder(-1); // Change to the "A" tagged encoder
 
-pros::Rotation vertical_encoder(17);
+pros::Rotation vertical_encoder(-17);
 
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, +1.95);
+// lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, -1.25);
 
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -1.5);
+// lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, +1.25);
 
-// chassis: 12.8 across, 13.5 height
-// traking cneter: 6.4, 6.75 
+// no odom T_T
 
-lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel
-                            nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
-                            &horizontal_tracking_wheel, // &horizontal_tracking_wheel
-                            nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
-                            &imu     // inertial sensor &imu
+// lateral motion controller
+lemlib::ControllerSettings linearController(20, //13.5, // proportional gain (kP) – this should be fine, if it still slightly oscillates reduce it a little
+                                            0.004, //0.1, // integral gain (kI) – this should be fine too, again, refer to programming last two pages how to tune PID
+                                            122.5, //3, // derivative gain (kD) – same as above (this should be fine too)
+                                            5, // anti windup
+                                            0.5, // small error range, in inches
+                                            1000, // small error range timeout, in milliseconds
+                                            2, // large error range, in inches
+                                            1000, // large error range timeout, in milliseconds
+                                            0 // maximum acceleration (slew)
 );
 
-// ---------------------------------------
-// PID Controller
-// ---------------------------------------
-
-lemlib::ControllerSettings linearController(  6, // proportional gain (kP)
-                                              -0.0045, // integral gain (kI) 0.11
-                                              2, // derivative gain (kD) 1.5
-                                              0, // anti windup
-                                              1, // small error range, in inches
-                                              200, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              75 // maximum acceleration (slew)
-);
-
-lemlib::ControllerSettings angularController(0.75, // proportional gain (kP)
-                                             0.00010, // integral gain (kI)
-                                             0.5, // derivative gain (kD)
-                                             0, // anti windup
-                                             1, // small error range, in degrees
-                                             200, // small error range timeout, in milliseconds
-                                             2, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
+// angular motion controller
+lemlib::ControllerSettings angularController(3.3, //2.5, // proportional gain (kP)
+                                             0.054, //0.03, // integral gain (kI)
+                                             19.75, //3, // derivative gain (kD)
+                                             5, // anti windup
+                                             0.5, // small error range, in inches
+                                             1000, // small error range timeout, in milliseconds
+                                             2, // large error range, in inches
+                                             1000, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 ); 
 
-// ---------------------------------------
-// ExpoDrive Constraints
-// ---------------------------------------
-
 // input curve for throttle input during driver control
-lemlib::ExpoDriveCurve throttleCurve(0, // joystick deadband out of 127
+lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband out of 127
                                      10, // minimum output where drivetrain will move out of 127
-                                     1 // expo curve gain 1.019 (LOG 0.9991)
+                                     1.019 // expo curve gain
 );
 
 // input curve for steer input during driver control
-lemlib::ExpoDriveCurve steerCurve(0, // joystick deadband out of 127
+lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
                                   10, // minimum output where drivetrain will move out of 127
-                                  1.010 // expo curve gain org 1.019
+                                  1.019 // expo curve gain
 );
 
-lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
+// sensors for odometry
+lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel, set to nullptr bc we don't have
+                            nullptr, // vertical tracking wheel 2, set to nullptr as we don't have
+                            nullptr, // &horizontal_tracking_wheel, set to nullptr bc we don't have
+                            nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have
+                            &imu // inertial sensor &imu
+);     //doesnt have anything bc we dont have odom wheels
+
+lemlib::Chassis chassis(drivetrain, // drivetrain motors, track width, wheels, rpm, and horizontal drift
+                        linearController, // linear PID
+                        angularController, // angular PID
+                        sensors, // sensors (just imu T_T)
+                        &throttleCurve, // throttle input during driver control
+                        &steerCurve // steer input during driver control
+);
