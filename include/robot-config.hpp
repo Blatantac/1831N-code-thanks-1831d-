@@ -21,24 +21,28 @@ extern lemlib::Drivetrain drivetrain;
 // Subsystem Configuration
 // ---------------------------------------
 extern pros::Controller master;
-extern pros::Motor intake;
+extern pros::Motor roller;
+extern pros::Motor hook;
+extern pros::MotorGroup intake;
 extern pros::Motor lady;
 extern pros::adi::DigitalOut mogo_mech;
-extern pros::adi::DigitalOut ringSort;
+extern pros::adi::DigitalOut doinker;
+extern pros::adi::DigitalOut endgame;
 
 // ---------------------------------------
 // Sensors (Miscellaneous)
 // ---------------------------------------
 extern pros::Imu imu;
-extern pros::Optical optical;
+extern pros::Optical colorSort;
+extern pros::Rotation lady_rotation;
 
 // ---------------------------------------
 // Odometry
 // ---------------------------------------
 extern pros::Rotation horizontal_encoder;
 extern pros::Rotation vertical_encoder;
-// extern lemlib::TrackingWheel horizontal_tracking_wheel;
-// extern lemlib::TrackingWheel vertical_tracking_wheel;
+extern lemlib::TrackingWheel horizontal_tracking_wheel;
+extern lemlib::TrackingWheel vertical_tracking_wheel;
 extern lemlib::OdomSensors sensors;
 
 // ---------------------------------------
