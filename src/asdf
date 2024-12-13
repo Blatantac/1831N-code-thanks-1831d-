@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "api.h"
 #include "liblvgl/core/lv_event.h"
+#include "liblvgl/core/lv_obj.h"
 #include "liblvgl/lvgl.h"
 #include "liblvgl/core/lv_disp.h"
 #include "liblvgl/extra/widgets/tabview/lv_tabview.h"
@@ -10,11 +11,7 @@
 #include "liblvgl/misc/lv_types.h"
 #include "liblvgl/widgets/lv_btnmatrix.h"
 
-namespace lemlib::selector{
-
-/*
-    SECTION 1 - INITIALISING BUTTON MATRIX
-*/
+namespace lemlib::selector {
 
 enum AutonState {
     NONE = 0,
@@ -23,9 +20,11 @@ enum AutonState {
 };
 
 AutonState autonState = NONE;
-
 int auton;
 int autonCount;
+
+uint16_t currentRedButton = UINT16_MAX; // Invalid initial value for red
+uint16_t currentBlueButton = UINT16_MAX; // Invalid initial value for blue
 
 void tabWatcher(void* param);
 
@@ -38,25 +37,47 @@ lv_obj_t* tabview;
 lv_obj_t* redBtnm;
 lv_obj_t* blueBtnm;
 
-// Traceback logging helper function
 void log_error(const std::string& func_name, const std::string& msg) {
     std::cerr << "[ERROR] in function " << func_name << ": " << msg << std::endl;
 }
 
-/*
-    SECTION 2 - BUTTON ACTION HANDLERS
-*/
+uint16_t get_button_count(lv_obj_t* btnm) {
+    const char** map = lv_btnmatrix_get_map(btnm);
+    uint16_t count = 0;
+    while (map[count] != NULL && strcmp(map[count], "") != 0) {
+        count++;
+    }
+    return count;
+}
+
+void deselect_all_buttons_except(lv_obj_t* btnm, uint16_t except_id) {
+    uint16_t btn_count = get_button_count(btnm);
+    for (uint16_t i = 0; i < btn_count; i++) {
+        if (i != except_id) {
+            lv_btnmatrix_clear_btn_ctrl(btnm, i, LV_BTNMATRIX_CTRL_CHECKED);
+        }
+    }
+}
+
+void select_all_buttons(lv_obj_t* btnm) {
+    uint16_t btn_count = get_button_count(btnm);
+    for (uint16_t i = 0; i < btn_count; i++) {
+            lv_btnmatrix_set_btn_ctrl(btnm, i, LV_BTNMATRIX_CTRL_CHECKED);
+    }
+}
 
 void redBtnmAction(lv_event_t* e) {
     try {
-        lv_obj_t* btnm = lv_event_get_target(e); // Get the button matrix object
-		uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm); // gettig button id
-		const char* txt = lv_btnmatrix_get_btn_text(btnm, btn_id);
+        lv_obj_t* btnm = lv_event_get_target(e);
+        uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm);
+        const char* txt = lv_btnmatrix_get_btn_text(btnm, btn_id);
 
         if (txt == nullptr) throw std::runtime_error("No active button text found!");
 
-        printf("Red button: %s released\n", txt);
+        printf("Red button: %s selected\n", txt);
+        printf("Button ID: %i\n", btn_id);
 
+        currentRedButton = btn_id;
         for (int i = 0; i < autonCount; i++) {
             if (strcmp(txt, btnmMap[i]) == 0) {
                 auton = i + 1;
@@ -65,20 +86,22 @@ void redBtnmAction(lv_event_t* e) {
             }
         }
     } catch (const std::exception& ex) {
-        log_error("redBtnmAction error:", ex.what());
+        log_error("redBtnmAction", ex.what());
     }
 }
 
 void blueBtnmAction(lv_event_t* e) {
     try {
-        lv_obj_t* btnm = lv_event_get_target(e); // Get the button matrix object
-		uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm);
-		const char* txt = lv_btnmatrix_get_btn_text(btnm, btn_id);
+        lv_obj_t* btnm = lv_event_get_target(e);
+        uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm);
+        const char* txt = lv_btnmatrix_get_btn_text(btnm, btn_id);
 
         if (txt == nullptr) throw std::runtime_error("No active button text found!");
 
-        printf("Blue button: %s released\n", txt);
+        printf("Blue button: %s selected\n", txt);
+        printf("Button ID: %i\n", btn_id);
 
+        currentBlueButton = btn_id;
         for (int i = 0; i < autonCount; i++) {
             if (strcmp(txt, btnmMap[i]) == 0) {
                 auton = -(i + 1);
@@ -91,57 +114,53 @@ void blueBtnmAction(lv_event_t* e) {
     }
 }
 
-void skillsBtnAction(lv_event_t* e) {
-    try {
-        printf("Skills button pressed\n");
-        auton = 0;
-        autonState = NONE; // TODO - Double check this
-    } catch (const std::exception& ex) {
-        log_error("skillsBtnAction", ex.what());
-    }
-}
-
-/*
-    SECTION 3 - [RAN IN THREAD] TABWATCHER REFRESH FUNCTION
-    TODO - Probs where error is
-*/
-
 void tabWatcher(void* param) {
     try {
         int activeTab = lv_tabview_get_tab_act(tabview);
-        while (true) {
+        while (1) {
             int currentTab = lv_tabview_get_tab_act(tabview);
 
             if (currentTab != activeTab) {
                 activeTab = currentTab;
                 if (activeTab == 0) {
-                    if (auton == 0) auton = 1;
                     auton = abs(auton);
-                    autonState = RED;
-                    lv_btnmatrix_set_btn_ctrl(redBtnm, abs(auton) - 1, LV_BTNMATRIX_CTRL_CHECKED);
+                    if (currentRedButton < UINT16_MAX) {
+                        deselect_all_buttons_except(redBtnm, currentRedButton);
+                        lv_btnmatrix_set_btn_ctrl(redBtnm, currentRedButton, LV_BTNMATRIX_CTRL_CHECKED);
+                    }
                 } else if (activeTab == 1) {
-                    if (auton == 0) auton = -1;
                     auton = -abs(auton);
-                    autonState = BLUE;
-                    lv_btnmatrix_set_btn_ctrl(blueBtnm, abs(auton) - 1, LV_BTNMATRIX_CTRL_CHECKED);
+                    if (currentBlueButton < UINT16_MAX) {
+                        deselect_all_buttons_except(blueBtnm, currentBlueButton);
+                        lv_btnmatrix_set_btn_ctrl(blueBtnm, currentBlueButton, LV_BTNMATRIX_CTRL_CHECKED);
+                    }
                 } else {
                     auton = 0;
-                    autonState = NONE;
                 }
             }
-
-            pros::delay(50); // Increased delay for better performance
+            else {
+                if (activeTab == 0) {
+                    auton = abs(auton);
+                    if (currentRedButton < UINT16_MAX) {
+                        deselect_all_buttons_except(redBtnm, currentRedButton);
+                        lv_btnmatrix_set_btn_ctrl(redBtnm, currentRedButton, LV_BTNMATRIX_CTRL_CHECKED);
+                    }
+                } else if (activeTab == 1) {
+                    auton = -abs(auton);
+                    if (currentBlueButton < UINT16_MAX) {
+                        deselect_all_buttons_except(blueBtnm, currentBlueButton);
+                        lv_btnmatrix_set_btn_ctrl(blueBtnm, currentBlueButton, LV_BTNMATRIX_CTRL_CHECKED);
+                    }
+                } else {
+                    auton = 0;
+                }
+            }
+            pros::delay(100);
         }
     } catch (const std::exception& ex) {
         log_error("tabWatcher", ex.what());
     }
 }
-
-/*
-    SECTION 4 - INITIALISING BUTTON MATRIX
-*/
-
-const int btn_height = 100;
 
 void init(int default_auton, const char** autons) {
     try {
@@ -150,61 +169,39 @@ void init(int default_auton, const char** autons) {
             btnmMap[i] = autons[i];
             i++;
         }
-        
+
         autonCount = i;
         auton = default_auton;
         autonState = (auton > 0) ? RED : ((auton < 0) ? BLUE : NONE);
-        
-        // Intiialise LVGL Theme
+
         lv_theme_t* th = lv_theme_default_init(
-            NULL,                        // Pointer to display or NULL for the default display
-            lv_color_hsv_to_rgb(0, 100, 100), // Primary color
-            lv_color_hsv_to_rgb(0, 100, 100), // Secondary color
-            true,                        // Dark mode
-            NULL                         // Font, set to NULL for the default font
+            NULL,
+            lv_color_hsv_to_rgb(0, 100, 100),
+            lv_color_hsv_to_rgb(0, 50, 100),
+            true,
+            NULL
         );
         lv_disp_set_theme(NULL, th);
 
-        // create a tab view object
         tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
-            // add 3 tabs (the tabs are page (lv_page) and can be scrolled
-            lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
-            lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
-            lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
+        lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
+        lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
 
-        if (autonState == RED) {
-            lv_tabview_set_act(tabview, 1, LV_ANIM_OFF); // RED
-        } else if (autonState == BLUE) {
-            lv_tabview_set_act(tabview, 2, LV_ANIM_OFF); // Blue
-        } else if (autonState = NONE){
-            lv_tabview_set_act(tabview, 3, LV_ANIM_OFF); // Skills
-        }
-        
-        // Initialize red button matrix
         redBtnm = lv_btnmatrix_create(redTab);
         lv_btnmatrix_set_map(redBtnm, btnmMap);
-        lv_obj_set_size(redBtnm, 450, btn_height);
+        lv_obj_set_size(redBtnm, 450, 100);
         lv_obj_align(redBtnm, LV_ALIGN_CENTER, 0, 0);
-        lv_obj_add_event_cb(redBtnm, redBtnmAction, LV_EVENT_SHORT_CLICKED, NULL);
+        lv_btnmatrix_set_btn_ctrl_all(redBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
+        lv_obj_add_event_cb(redBtnm, redBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
 
-        // Initialize blue button matrix
         blueBtnm = lv_btnmatrix_create(blueTab);
         lv_btnmatrix_set_map(blueBtnm, btnmMap);
-        lv_obj_set_size(blueBtnm, 450, btn_height);
+        lv_obj_set_size(blueBtnm, 450, 100);
         lv_obj_align(blueBtnm, LV_ALIGN_CENTER, 0, 0);
-        lv_obj_add_event_cb(blueBtnm, blueBtnmAction, LV_EVENT_SHORT_CLICKED, nullptr);
+        lv_btnmatrix_set_btn_ctrl_all(blueBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
+        lv_obj_add_event_cb(blueBtnm, blueBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
 
-        // Initialize skills button
-        lv_obj_t* skillsBtn = lv_btn_create(skillsTab);
-        lv_obj_t* label = lv_label_create(skillsBtn);
-        lv_label_set_text(label, "Skills");
-        lv_obj_align(skillsBtn, LV_ALIGN_CENTER, 0, 0);
-        lv_obj_set_size(skillsBtn, 450, btn_height);
-        lv_obj_add_event_cb(skillsBtn, skillsBtnAction, LV_EVENT_SHORT_CLICKED, nullptr);
-
-        // tabWatcher_task = pros::task_t(tabWatcher); // TODO
-
-		tabWatcher_task = new pros::rtos::Task(tabWatcher, nullptr, "tabWatcher");
+        tabWatcher_task = new pros::Task(tabWatcher, nullptr, "tabWatcher");
 
     } catch (const std::exception& ex) {
         log_error("init", ex.what());
@@ -213,11 +210,10 @@ void init(int default_auton, const char** autons) {
 
 void destroy() {
     if (tabWatcher_task != nullptr) {
-        tabWatcher_task->remove(); // Stop and delete the task
+        tabWatcher_task->remove();
         delete tabWatcher_task;
         tabWatcher_task = nullptr;
     }
 }
 
-
-} //namespace lemlib::selector
+} // namespace lemlib::selector

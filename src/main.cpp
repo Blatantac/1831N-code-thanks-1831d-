@@ -60,6 +60,8 @@ void initialize() {
     lemlib::selector::init(1, b); // declaring default auton
 
     // TODO - Add Color sort selector in compatiable with Selector
+    // TODO - Add Lemlib XYT tracking into LVGL, with also temp sensors
+
         // Selecting Alliance Color
         // pros::lcd::register_btn1_cb(setColorSort);
         // pros::lcd::print(3, "[!] ALLIANCE NOT SELECTED, (MID BTN)");

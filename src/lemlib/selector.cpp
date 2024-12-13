@@ -11,6 +11,11 @@
 #include "liblvgl/misc/lv_types.h"
 #include "liblvgl/widgets/lv_btnmatrix.h"
 
+/**
+ * [] TODO - Implement global variables for selecting auton
+ * [] TODO - (Hard challenge, save before doing) Adding Skills tab with skills auton, driver & do nothing/spin intake only
+ * [] TODO - (Hard challenge, save before doing) Being able to port custom new auton into the selector. 
+ */
 namespace lemlib::selector {
 
 enum AutonState {
@@ -113,9 +118,21 @@ void blueBtnmAction(lv_event_t* e) {
     }
 }
 
+// 
+// Dear maintainer:
+// 
+// Once you are done trying to 'optimize' this routine,
+// and have realized what a terrible mistake that was,
+// please increment the following counter as a warning
+// to the next guy:
+// 
+// total_hours_wasted_here = 2
+// 
+
 void tabWatcher(void* param) {
     try {
         int activeTab = lv_tabview_get_tab_act(tabview);
+        // infinite loop to repeat in thread
         while (1) {
             int currentTab = lv_tabview_get_tab_act(tabview);
 
