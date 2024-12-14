@@ -154,7 +154,7 @@ void tabWatcher(void* param) {
                     auton = 0;
                 }
             }
-            else {
+            else { // Magic. Do not touch.
                 if (activeTab == 0) {
                     auton = abs(auton);
                     if (currentRedButton < UINT16_MAX) {

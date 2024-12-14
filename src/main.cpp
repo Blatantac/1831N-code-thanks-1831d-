@@ -96,21 +96,21 @@ void autonomous() {
     chassis.setPose(0, 0, 0); 
 
     switch (lemlib::selector::auton) {
-    case 1:
-      RedLeft(); //runs red side red left code
-      break;
-    case 2:
-      RedRight(); //runs red side autonomous 2 code
-      break;
-    case -1:
-      BlueLeft(); //runs blue side autonomous 1 code
-      break;
-    case -2:
-      BlueRight(); //runs blue side autonomous 2 code
-      break;
-    case 0:
-      Skills(); //runs skills autonomous code
-      break;
+        case 1:
+            RedLeft(); //runs red side red left code
+            break;
+        case 2:
+            RedRight(); //runs red side autonomous 2 code
+            break;
+        case -1:
+            BlueLeft(); //runs blue side autonomous 1 code
+            break;
+        case -2:
+            BlueRight(); //runs blue side autonomous 2 code
+            break;
+        case 0:
+            Skills(); //runs skills autonomous code
+            break;
   }
 }
 
