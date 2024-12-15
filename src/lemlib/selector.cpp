@@ -13,6 +13,11 @@
 
 namespace lemlib::selector {
 
+// TODO - Refactoring into OOP
+    // 1. Use constructor to declare button number, tab number etc
+    // 2. Allow methods to start/stop/modify selector
+    // 3. (I can work on this if u wnat) add comment section below each button
+
 enum AutonState {
     NONE = 0,
     RED = 1,
@@ -23,7 +28,7 @@ AutonState autonState = NONE;
 int auton;
 int autonCount;
 
-uint16_t currentRedButton = UINT16_MAX;
+uint16_t currentRedButton = UINT16_MAX; // button IDs for buttons selected rn
 uint16_t currentBlueButton = UINT16_MAX;
 uint16_t currentSKillsButton = UINT16_MAX;
 
@@ -61,8 +66,8 @@ void deselect_all_buttons(lv_obj_t* btnm) {
 
 void redBtnmAction(lv_event_t* e) {
     try {
-        lv_obj_t* btnm = lv_event_get_target(e);
-        uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm);
+        lv_obj_t* btnm = lv_event_get_target(e); // know our button matrix
+        uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm); // get button id
         const char* txt = lv_btnmatrix_get_btn_text(btnm, btn_id);
 
         if (txt == nullptr) throw std::runtime_error("No active button text found!");
@@ -76,9 +81,10 @@ void redBtnmAction(lv_event_t* e) {
         currentRedButton = btn_id;
         currentBlueButton = UINT16_MAX;
         currentSKillsButton = UINT16_MAX;
+
         for (int i = 0; i < autonCount; i++) {
             if (strcmp(txt, btnmMap[i]) == 0) {
-                auton = i + 1;
+                auton = i + 1; // determining what program/routine is ran
                 autonState = RED;
                 break;
             }
@@ -196,6 +202,7 @@ void init(int default_auton, const char** autons) {
         auton = default_auton;
         autonState = (auton > 0) ? RED : ((auton < 0) ? BLUE : NONE);
 
+        // Declaring color theme
         lv_theme_t* th = lv_theme_default_init(
             NULL,
             lv_color_hsv_to_rgb(0, 100, 100),
@@ -205,6 +212,7 @@ void init(int default_auton, const char** autons) {
         );
         lv_disp_set_theme(NULL, th);
 
+        // Creating LVGL buttons & tab object
         tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
         lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
         lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
