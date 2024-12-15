@@ -21,6 +21,14 @@
 
 LV_IMG_DECLARE(image); //TKSRC Logo
 
+// TODO - Temporary
+void autonwatcher() {
+    while (true) {
+        printf("Selected Auton: %i\n", lemlib::selector::auton);
+        pros::delay(10);
+    }
+}
+
 
 void initialize() {
     // ------------------------------------------
@@ -58,6 +66,9 @@ void initialize() {
 
     const char* b[] = {AUTONS, ""}; // Names of autons, up to 10
     lemlib::selector::init(1, b); // declaring default auton
+
+    // TODO - temporary 
+    pros::Task watcher(autonwatcher);
 
     // TODO - Add Color sort selector in compatiable with Selector
     // TODO - Add Lemlib XYT tracking into LVGL, with also temp sensors
@@ -117,13 +128,12 @@ void autonomous() {
 void opcontrol() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    
+
     // DON'T CHANGE!: Multi-treading for robot controls (To prevent color sort interruption)
     pros::Task intakeTask(intake_control); // Interrupted by color sort
     pros::Task mogoTask(mogo_control);
     pros::Task driveTask(drivetrain_control);
     pros::Task ladyTask(ladyctl);
     pros::Task doinkerTask(doinker_control);
-
     pros::Task endgameTask(endgame_control);
 }

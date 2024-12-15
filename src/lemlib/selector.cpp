@@ -11,11 +11,6 @@
 #include "liblvgl/misc/lv_types.h"
 #include "liblvgl/widgets/lv_btnmatrix.h"
 
-/**
- * [] TODO - Implement global variables for selecting auton
- * [] TODO - (Hard challenge, save before doing) Adding Skills tab with skills auton, driver & do nothing/spin intake only
- * [] TODO - (Hard challenge, save before doing) Being able to port custom new auton into the selector. 
- */
 namespace lemlib::selector {
 
 enum AutonState {
@@ -28,8 +23,9 @@ AutonState autonState = NONE;
 int auton;
 int autonCount;
 
-uint16_t currentRedButton = UINT16_MAX; // Invalid initial value for red
-uint16_t currentBlueButton = UINT16_MAX; // Invalid initial value for blue
+uint16_t currentRedButton = UINT16_MAX;
+uint16_t currentBlueButton = UINT16_MAX;
+uint16_t currentSKillsButton = UINT16_MAX;
 
 void tabWatcher(void* param);
 
@@ -41,6 +37,7 @@ const char* btnmMap[MAX_AUTONS];
 lv_obj_t* tabview;
 lv_obj_t* redBtnm;
 lv_obj_t* blueBtnm;
+lv_obj_t* skillsBtnm;
 
 void log_error(const std::string& func_name, const std::string& msg) {
     std::cerr << "[ERROR] in function " << func_name << ": " << msg << std::endl;
@@ -73,11 +70,12 @@ void redBtnmAction(lv_event_t* e) {
         printf("Red button: %s selected\n", txt);
         printf("Button ID: %i\n", btn_id);
 
-        // Deselect all blue buttons
         deselect_all_buttons(blueBtnm);
+        deselect_all_buttons(skillsBtnm);
 
         currentRedButton = btn_id;
-        currentBlueButton = UINT16_MAX; // Reset blue button selection
+        currentBlueButton = UINT16_MAX;
+        currentSKillsButton = UINT16_MAX;
         for (int i = 0; i < autonCount; i++) {
             if (strcmp(txt, btnmMap[i]) == 0) {
                 auton = i + 1;
@@ -101,11 +99,12 @@ void blueBtnmAction(lv_event_t* e) {
         printf("Blue button: %s selected\n", txt);
         printf("Button ID: %i\n", btn_id);
 
-        // Deselect all red buttons
         deselect_all_buttons(redBtnm);
+        deselect_all_buttons(skillsBtnm);
 
         currentBlueButton = btn_id;
-        currentRedButton = UINT16_MAX; // Reset red button selection
+        currentRedButton = UINT16_MAX;
+        currentSKillsButton = UINT16_MAX;
         for (int i = 0; i < autonCount; i++) {
             if (strcmp(txt, btnmMap[i]) == 0) {
                 auton = -(i + 1);
@@ -118,66 +117,72 @@ void blueBtnmAction(lv_event_t* e) {
     }
 }
 
-// 
-// Dear maintainer:
-// 
-// Once you are done trying to 'optimize' this routine,
-// and have realized what a terrible mistake that was,
-// please increment the following counter as a warning
-// to the next guy:
-// 
-// total_hours_wasted_here = 2
-// 
+void skillsBtnmAction(lv_event_t* e) {
+    try {
+        lv_obj_t* btnm = lv_event_get_target(e);
+        uint16_t btn_id = lv_btnmatrix_get_selected_btn(btnm);
+        const char* txt = lv_btnmatrix_get_btn_text(btnm, btn_id);
+
+        if (txt == nullptr) throw std::runtime_error("No active button text found!");
+
+        printf("Skills button: %s selected\n", txt);
+        printf("Button ID: %i\n", btn_id);
+
+        deselect_all_buttons(redBtnm);
+        deselect_all_buttons(blueBtnm);
+
+        currentBlueButton = UINT16_MAX;
+        currentRedButton = UINT16_MAX;
+        currentSKillsButton = btn_id;
+
+        switch (btn_id) {
+            case 0:
+                auton = 11; // Auton Skills
+                break;
+            case 1:
+                auton = 12; // Do Nothing
+                break;
+            case 2:
+                auton = 13; // Spin Intake
+                break;
+            default:
+                auton = 0;
+                break;
+        }
+        autonState = NONE;
+    } catch (const std::exception& ex) {
+        log_error("skillsBtnmAction", ex.what());
+    }
+}
 
 void tabWatcher(void* param) {
     try {
         int activeTab = lv_tabview_get_tab_act(tabview);
-        // infinite loop to repeat in thread
         while (1) {
             int currentTab = lv_tabview_get_tab_act(tabview);
-
             if (currentTab != activeTab) {
                 activeTab = currentTab;
-                if (activeTab == 0) {
-                    auton = abs(auton);
-                    if (currentRedButton < UINT16_MAX) {
-                        deselect_all_buttons(redBtnm);
-                        lv_btnmatrix_set_btn_ctrl(redBtnm, currentRedButton, LV_BTNMATRIX_CTRL_CHECKED);
-                    }
-                } else if (activeTab == 1) {
-                    auton = -abs(auton);
-                    if (currentBlueButton < UINT16_MAX) {
-                        deselect_all_buttons(blueBtnm);
-                        lv_btnmatrix_set_btn_ctrl(blueBtnm, currentBlueButton, LV_BTNMATRIX_CTRL_CHECKED);
-                    }
-                } else {
-                    auton = 0;
-                }
-            }
-            else { // Magic. Do not touch.
-                if (activeTab == 0) {
-                    auton = abs(auton);
-                    if (currentRedButton < UINT16_MAX) {
-                        deselect_all_buttons(redBtnm);
-                        lv_btnmatrix_set_btn_ctrl(redBtnm, currentRedButton, LV_BTNMATRIX_CTRL_CHECKED);
-                    }
-                } else if (activeTab == 1) {
-                    auton = -abs(auton);
-                    if (currentBlueButton < UINT16_MAX) {
-                        deselect_all_buttons(blueBtnm);
-                        lv_btnmatrix_set_btn_ctrl(blueBtnm, currentBlueButton, LV_BTNMATRIX_CTRL_CHECKED);
-                    }
-                } else {
-                    auton = 0;
-                }
             }
 
-            pros::delay(100);
+            // Handle actions for the active tab
+            if (activeTab == 0 && currentRedButton < UINT16_MAX) {
+                deselect_all_buttons(redBtnm);
+                lv_btnmatrix_set_btn_ctrl(redBtnm, currentRedButton, LV_BTNMATRIX_CTRL_CHECKED);
+            } else if (activeTab == 1 && currentBlueButton < UINT16_MAX) {
+                deselect_all_buttons(blueBtnm);
+                lv_btnmatrix_set_btn_ctrl(blueBtnm, currentBlueButton, LV_BTNMATRIX_CTRL_CHECKED);
+            } else if (activeTab == 2 && currentSKillsButton < UINT16_MAX) {
+                deselect_all_buttons(skillsBtnm);
+                lv_btnmatrix_set_btn_ctrl(skillsBtnm, currentSKillsButton, LV_BTNMATRIX_CTRL_CHECKED);
+            }
+
+            pros::delay(10);
         }
     } catch (const std::exception& ex) {
         log_error("tabWatcher", ex.what());
     }
 }
+
 
 void init(int default_auton, const char** autons) {
     try {
@@ -203,6 +208,7 @@ void init(int default_auton, const char** autons) {
         tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
         lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
         lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
+        lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
 
         redBtnm = lv_btnmatrix_create(redTab);
         lv_btnmatrix_set_map(redBtnm, btnmMap);
@@ -217,6 +223,14 @@ void init(int default_auton, const char** autons) {
         lv_obj_align(blueBtnm, LV_ALIGN_CENTER, 0, 0);
         lv_btnmatrix_set_btn_ctrl_all(blueBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(blueBtnm, blueBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
+
+        static const char* skillsBtnmMap[] = {"Auton Skills", "Do Nothing", "Spin Intake", "", NULL};
+        skillsBtnm = lv_btnmatrix_create(skillsTab);
+        lv_btnmatrix_set_map(skillsBtnm, skillsBtnmMap);
+        lv_obj_set_size(skillsBtnm, 450, 100);
+        lv_obj_align(skillsBtnm, LV_ALIGN_CENTER, 0, 0);
+        lv_btnmatrix_set_btn_ctrl_all(skillsBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
+        lv_obj_add_event_cb(skillsBtnm, skillsBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
 
         tabWatcher_task = new pros::Task(tabWatcher, nullptr, "tabWatcher");
 

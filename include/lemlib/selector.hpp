@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "api.h"
 #include "liblvgl/core/lv_event.h"
+#include "liblvgl/core/lv_obj.h"
 #include "liblvgl/lvgl.h"
 #include "liblvgl/core/lv_disp.h"
 #include "liblvgl/extra/widgets/tabview/lv_tabview.h"
@@ -15,31 +16,37 @@
 
 namespace lemlib::selector {
 
-/*
-    SECTION 1 - INITIALISING BUTTON MATRIX
-*/
+// Enumeration to define the autonomous state
+enum AutonState {
+    NONE = 0,
+    RED = 1,
+    BLUE = -1
+};
 
+// Global variables for selector logic
+extern AutonState autonState;
 extern int auton;
 extern int autonCount;
 
-// Function prototype for tabWatcher
-int tabWatcher(void* param);
+extern uint16_t currentRedButton;
+extern uint16_t currentBlueButton;
 
 extern pros::rtos::Task* tabWatcher_task;
 
-extern const char* btnmMap[]; // Declaration of btnmMap array
+constexpr int MAX_AUTONS = 10;
+extern const char* btnmMap[MAX_AUTONS];
 
 extern lv_obj_t* tabview;
 extern lv_obj_t* redBtnm;
 extern lv_obj_t* blueBtnm;
 
-// Traceback logging helper function
+// Function declarations
 void log_error(const std::string& func_name, const std::string& msg);
-
+uint16_t get_button_count(lv_obj_t* btnm);
+void deselect_all_buttons(lv_obj_t* btnm);
 void redBtnmAction(lv_event_t* e);
 void blueBtnmAction(lv_event_t* e);
-void skillsBtnAction(lv_event_t* e);
-int tabWatcher(void* param);
+void tabWatcher(void* param);
 void init(int default_auton, const char** autons);
 void destroy();
 
