@@ -14,7 +14,6 @@
 #include "lemlib/selector.hpp" // For auton selector
 #include "robot-config.hpp"
 #include "controls.hpp"
-#include "ladyPid.hpp"
 
 // Autonomous routines declarations
 int RedLeft();
