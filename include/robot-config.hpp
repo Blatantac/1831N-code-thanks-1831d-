@@ -24,6 +24,7 @@ extern pros::Controller master;
 extern pros::Motor roller;
 extern pros::Motor hook;
 extern pros::MotorGroup intake;
+extern pros::Motor lady;
 extern pros::adi::DigitalOut mogo_mech;
 extern pros::adi::DigitalOut doinker;
 extern pros::adi::DigitalOut endgame;
@@ -33,15 +34,7 @@ extern pros::adi::DigitalOut endgame;
 // ---------------------------------------
 extern pros::Imu imu;
 extern pros::Optical colorSort;
-
-// ---------------------------------------
-// Macro (Wall Stake Mech)
-// ---------------------------------------
-
-extern pros::MotorGroup lady;
-extern lemlib::PID ladypid;
 extern pros::Rotation lady_rotation;
-extern lemlib::SmartMotor ladySmart;
 
 // ---------------------------------------
 // Odometry

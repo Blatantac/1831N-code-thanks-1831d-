@@ -1,10 +1,8 @@
-#include "lemlib/smartMotor.hpp"
 #include "main.h"
 #include "lemlib/api.hpp"
 #include "lemlib/chassis/chassis.hpp"
 #include "pros/device.hpp"
 #include "pros/misc.h"
-#include "pros/motor_group.hpp"
 #include "pros/motors.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
@@ -36,9 +34,11 @@ pros::Motor roller(1);
 pros::Motor hook(-6);
 
 pros::MotorGroup intake({1, -6}, pros::MotorGearset::green); // front 1, back 6
+pros::Motor lady(5);
 pros::adi::DigitalOut mogo_mech (8);
 pros::adi::DigitalOut doinker (7);
 pros::adi::DigitalOut endgame (1);
+// pros::adi::DigitalOut lift ();
 
 // ---------------------------------------
 // Sensors (Miscellaneous)
@@ -46,15 +46,7 @@ pros::adi::DigitalOut endgame (1);
 
 pros::Imu imu(11);
 pros::Optical colorSort (18);
-
-// ---------------------------------------
-// Macro (Wall Stake Mech)
-// ---------------------------------------
-
-pros::MotorGroup lady({5});
-lemlib::PID ladypid(10, 0.4, 50, 0, false);
 pros::Rotation lady_rotation (12);
-lemlib::SmartMotor ladySmart(&lady, &lady_rotation, ladypid);
 
 // ---------------------------------------
 // Odometry
