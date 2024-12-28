@@ -11,9 +11,9 @@
 #include "lemlib/selector.hpp" // For auton selector
 #include "robot-config.hpp"
 #include "controls.hpp"
-#include "ladyPid.hpp"
 
 int RedLeft() {
+    ladySmart.movePID(4000, 2000); // For demo purposes
     return 0;
 }
 
