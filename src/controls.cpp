@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 
 #include "robot-config.hpp"
+#include "ladyPid.hpp"
 
 char alliance = 'N';
 bool allianceConfirmed = false;
@@ -19,7 +20,7 @@ double lady_pos;
 
 void graphOdom() {
     do {
-        lemlib::Pose position = chassis.getPose();
+        Pose position = chassis.getPose();
         float x = position.x;
         float y = position.y;
 
@@ -122,7 +123,11 @@ void ladyctl() {
             pros::delay(400);
             lady.move(0);
             lady_rotation.set_position(0);
+<<<<<<< HEAD
             ladySmart.movePID(-900, 2000, 0.01, false);
+=======
+            LadyMovePID(-900, 2000, false);
+>>>>>>> parent of 3885f3b (implemented smartMotor feature, temporarily removed selector)
         }
         else if (spinning == true) {
             lady.brake();
