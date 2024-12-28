@@ -29,8 +29,9 @@ This project is licensed under the MIT license. Check [LICENSE](https://github.c
 
 **Team 1831A** is a currently active V5RC **MS** team based in the same school.
 
+<!--
+NOTE - Commented out
 ---
-
 ## Project Structure  
 
 Here's an overview of the repository:  
@@ -46,7 +47,7 @@ Here's an overview of the repository:
 │
 └── README.md           # Repository overview  
 ```  
-
+-->
 ---
 
 ## Getting Started  
