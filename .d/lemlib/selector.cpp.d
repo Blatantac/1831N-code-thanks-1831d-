@@ -130,7 +130,8 @@ bin/lemlib/selector.cpp.o: src/lemlib/selector.cpp include/api.h \
  include/pros/rotation.hpp include/pros/rotation.h include/pros/rtos.hpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/liblvgl/core/lv_event.h \
- include/liblvgl/extra/widgets/tabview/lv_tabview.h
+ include/liblvgl/extra/widgets/tabview/lv_tabview.h \
+ include/lemlib/selector.hpp
 include/api.h:
 include/pros/adi.h:
 include/pros/colors.h:
@@ -346,3 +347,4 @@ include/pros/vision.hpp:
 include/pros/vision.h:
 include/liblvgl/core/lv_event.h:
 include/liblvgl/extra/widgets/tabview/lv_tabview.h:
+include/lemlib/selector.hpp:
