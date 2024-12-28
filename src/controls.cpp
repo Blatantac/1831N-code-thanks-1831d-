@@ -9,7 +9,6 @@
 #include <sys/wait.h>
 
 #include "robot-config.hpp"
-#include "ladyPid.hpp"
 
 char alliance = 'N';
 bool allianceConfirmed = false;
@@ -20,7 +19,7 @@ double lady_pos;
 
 void graphOdom() {
     do {
-        Pose position = chassis.getPose();
+        lemlib::Pose position = chassis.getPose();
         float x = position.x;
         float y = position.y;
 
@@ -123,7 +122,7 @@ void ladyctl() {
             pros::delay(400);
             lady.move(0);
             lady_rotation.set_position(0);
-            LadyMovePID(-900, 2000, false);
+            ladySmart.movePID(-900, 2000, 0.5, false);
         }
         else if (spinning == true) {
             lady.brake();
