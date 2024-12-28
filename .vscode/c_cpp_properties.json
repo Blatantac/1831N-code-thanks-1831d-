@@ -5,15 +5,14 @@
       "includePath": [
         "${workspaceFolder}/**",
         "/Users/cai_ya/Documents/GitHub/1831-Common-Codebase/include",
-        "/Users/arona/Documents/GitHub/1831-Common-Codebase/include",
-        "c:\\Users\\rike\\OneDrive\\Documents\\GitHub\\1831-Common-Codebase\\include"
+        "/Users/arona/Documents/GitHub/1831-Common-Codebase/include"
       ],
       "defines": [
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "compilerPath": "c:\\Users\\rike\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
+      "compilerPath": "/Users/arona/Library/Application Support/Code/User/globalStorage/sigbots.pros/install/pros-toolchain-macos/bin/arm-none-eabi-g++",
       "cStandard": "gnu11",
       "cppStandard": "gnu++20",
       "intelliSenseMode": "gcc-arm",
@@ -22,7 +21,7 @@
       ],
       "browse": {
         "path": [
-          "c:\\Users\\rike\\OneDrive\\Documents\\GitHub\\1831-Common-Codebase"
+          "/Users/arona/Documents/GitHub/1831-Common-Codebase"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
