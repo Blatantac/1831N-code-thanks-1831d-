@@ -140,9 +140,8 @@ bin/controls.cpp.o: src/controls.cpp include/main.h include/api.h \
  include/fmt/format-inl.h include/lemlib/logger/baseSink.hpp \
  include/fmt/args.h include/lemlib/logger/message.hpp \
  include/lemlib/logger/infoSink.hpp \
- include/lemlib/logger/telemetrySink.hpp include/robot-config.hpp \
- include/main.h include/ladyPid.hpp include/robot-config.hpp \
- include/controls.hpp
+ include/lemlib/logger/telemetrySink.hpp include/lemlib/smartMotor.hpp \
+ include/robot-config.hpp include/main.h
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -380,8 +379,6 @@ include/fmt/args.h:
 include/lemlib/logger/message.hpp:
 include/lemlib/logger/infoSink.hpp:
 include/lemlib/logger/telemetrySink.hpp:
+include/lemlib/smartMotor.hpp:
 include/robot-config.hpp:
 include/main.h:
-include/ladyPid.hpp:
-include/robot-config.hpp:
-include/controls.hpp:
