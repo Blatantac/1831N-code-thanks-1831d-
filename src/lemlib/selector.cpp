@@ -223,7 +223,7 @@ void init(int default_auton, const char** autons) {
         lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
         lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
         lv_obj_t* devTab = lv_tabview_add_tab(tabview, "Developer");
-        lv_obj_t* bocchiTab = lv_tabview_add_tab(tabview, "Dorito");
+        lv_obj_t* bocchiTab = lv_tabview_add_tab(tabview, " ");
 
         redBtnm = lv_btnmatrix_create(redTab);
         lv_btnmatrix_set_map(redBtnm, btnmMap);
