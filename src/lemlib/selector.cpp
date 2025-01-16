@@ -10,6 +10,9 @@
 #include "liblvgl/misc/lv_area.h"
 #include "liblvgl/misc/lv_types.h"
 #include "liblvgl/widgets/lv_btnmatrix.h"
+#include "liblvgl/widgets/lv_textarea.h"
+
+LV_IMG_DECLARE(dorito); //TKSRC Logo
 
 namespace lemlib::selector {
 
@@ -180,6 +183,8 @@ void tabWatcher(void* param) {
             } else if (activeTab == 2 && currentSKillsButton < UINT16_MAX) {
                 deselect_all_buttons(skillsBtnm);
                 lv_btnmatrix_set_btn_ctrl(skillsBtnm, currentSKillsButton, LV_BTNMATRIX_CTRL_CHECKED);
+            } else if (activeTab == 3) {
+                // TODO - WIP
             }
 
             pros::delay(10);
@@ -217,6 +222,8 @@ void init(int default_auton, const char** autons) {
         lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
         lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
         lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
+        lv_obj_t* devTab = lv_tabview_add_tab(tabview, "Developer");
+        lv_obj_t* bocchiTab = lv_tabview_add_tab(tabview, "Dorito");
 
         redBtnm = lv_btnmatrix_create(redTab);
         lv_btnmatrix_set_map(redBtnm, btnmMap);
@@ -240,12 +247,126 @@ void init(int default_auton, const char** autons) {
         lv_btnmatrix_set_btn_ctrl_all(skillsBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(skillsBtnm, skillsBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
 
+        // Define layout dimensions for L-shaped split screen
+        const int width = 480;
+        const int height = 272;
+
+        const int left_width = width / 2; // Left side width for Motor Temps
+        const int right_width = width - left_width;
+        const int top_height = height / 2; // Top height for Odometry
+
+        // Create "Motor Temps" text area
+        lv_obj_t *motor_temps_textarea = lv_textarea_create(devTab);
+        lv_obj_set_size(motor_temps_textarea, left_width - 30, 170);
+        lv_obj_align(motor_temps_textarea, LV_ALIGN_TOP_LEFT, -10, -10);
+        lv_textarea_add_text(motor_temps_textarea, "Left 1: \n");
+        lv_textarea_add_text(motor_temps_textarea, "Left 2: \n");
+        lv_textarea_add_text(motor_temps_textarea, "Left 3: \n");
+        lv_textarea_add_text(motor_temps_textarea, "Right 1: \n");
+        lv_textarea_add_text(motor_temps_textarea, "Right 2: \n");
+        lv_textarea_add_text(motor_temps_textarea, "Right 3: \n---------------------------- \n");
+        lv_textarea_add_text(motor_temps_textarea, "Intake: \n");
+        lv_textarea_add_text(motor_temps_textarea, "WallMech: ");
+
+        lv_textarea_set_cursor_click_pos(motor_temps_textarea, false);
+        lv_textarea_set_password_mode(motor_temps_textarea, false);
+        lv_obj_add_state(motor_temps_textarea, LV_STATE_DISABLED);
+
+        lv_obj_t *odom_textarea = lv_textarea_create(devTab);
+        lv_obj_set_size(odom_textarea, left_width, 70);
+        lv_obj_align(odom_textarea, LV_ALIGN_TOP_LEFT, 205, -10);
+        lv_textarea_add_text(odom_textarea, "X: \n");
+        lv_textarea_add_text(odom_textarea, "Y: \n");
+        lv_textarea_add_text(odom_textarea, "Theta: ");
+
+        lv_textarea_set_cursor_click_pos(odom_textarea, false);
+        lv_textarea_set_password_mode(odom_textarea, false);
+        lv_obj_add_state(odom_textarea, LV_STATE_DISABLED);
+
+        lv_obj_t *other_textarea = lv_textarea_create(devTab);
+        lv_obj_set_size(other_textarea, left_width, 95);
+        lv_obj_align(other_textarea, LV_ALIGN_TOP_LEFT, 205, 65);
+        lv_textarea_add_text(other_textarea, "Alliance: \n");
+        lv_textarea_add_text(other_textarea, "Lady Position: \n");
+        lv_textarea_add_text(other_textarea, "Chassis Kp: \n");
+        lv_textarea_add_text(other_textarea, "Chassis Ki: \n");
+        lv_textarea_add_text(other_textarea, "Chassis Kd: ");
+
+        lv_textarea_set_cursor_click_pos(other_textarea, false);
+        lv_textarea_set_password_mode(other_textarea, false);
+        lv_obj_add_state(other_textarea, LV_STATE_DISABLED);
+
+        // // Create "Odometry" text area
+        // lv_obj_t *odometry_label = lv_label_create(devTab);
+        // lv_label_set_text(odometry_label, "Odometry");
+        // lv_obj_align(odometry_label, LV_ALIGN_TOP_RIGHT, -right_width + 10, 10);
+
+        // lv_obj_t *odometry_textarea = lv_textarea_create(devTab);
+        // lv_obj_set_size(odometry_textarea, right_width - 20, top_height - 40);
+        // lv_obj_align(odometry_textarea, LV_ALIGN_TOP_RIGHT, -right_width + 10, 40);
+        // lv_textarea_set_text(odometry_textarea, "");
+        // lv_textarea_set_cursor_click_pos(odometry_textarea, false);
+        // lv_textarea_set_password_mode(odometry_textarea, false);
+        // lv_obj_add_state(odometry_textarea, LV_STATE_DISABLED);
+
+        // // Create "Macros" text area
+        // lv_obj_t *macros_label = lv_label_create(devTab);
+        // lv_label_set_text(macros_label, "Macros");
+        // lv_obj_align(macros_label, LV_ALIGN_BOTTOM_RIGHT, -right_width + 10, -top_height + 10);
+
+        // lv_obj_t *macros_textarea = lv_textarea_create(devTab);
+        // lv_obj_set_size(macros_textarea, right_width - 20, height - top_height - 40);
+        // lv_obj_align(macros_textarea, LV_ALIGN_BOTTOM_RIGHT, -right_width + 10, -top_height + 40);
+        // lv_textarea_set_text(macros_textarea, "");
+        // lv_textarea_set_cursor_click_pos(macros_textarea, false);
+        // lv_textarea_set_password_mode(macros_textarea, false);
+        // lv_obj_add_state(macros_textarea, LV_STATE_DISABLED);
+
+        lv_obj_t *img = lv_img_create(bocchiTab);
+        lv_img_set_src(img, &dorito); // Link to source image
+        lv_obj_align(img, LV_ALIGN_CENTER, 0, 0); // Align image in the tab
+
+        // Set the image scale to 90% (zoom factor is in 256ths, so 90% = 0.9 * 256 = 230)
+        lv_img_set_zoom(img, 200);
+
+
         tabWatcher_task = new pros::Task(tabWatcher, nullptr, "tabWatcher");
 
     } catch (const std::exception& ex) {
         log_error("init", ex.what());
     }
 }
+
+/*
+    // Make tabs read-only
+    lv_tabview_set_btns_hidden(tabview, true);
+
+    // Create content for "Motor Temps" tab
+    lv_obj_t *motor_temp_label = lv_label_create(tab1);
+    lv_label_set_text(motor_temp_label, "Motor Temps:");
+    lv_obj_set_size(motor_temp_label, lv_pct(100), lv_pct(100));
+    lv_obj_align(motor_temp_label, LV_ALIGN_TOP_LEFT, 10, 10);
+
+    // Create content for "Odometry" tab
+    lv_obj_t *odometry_label = lv_label_create(tab2);
+    lv_label_set_text(odometry_label, "Odometry:");
+    lv_obj_set_size(odometry_label, lv_pct(100), lv_pct(100));
+    lv_obj_align(odometry_label, LV_ALIGN_TOP_LEFT, 10, 10);
+
+    // Create content for "Macros" tab
+    lv_obj_t *macros_label = lv_label_create(tab3);
+    lv_label_set_text(macros_label, "Macros:");
+    lv_obj_set_size(macros_label, lv_pct(100), lv_pct(100));
+    lv_obj_align(macros_label, LV_ALIGN_TOP_LEFT, 10, 10);
+
+    // Set split screen behavior
+    lv_obj_set_flex_flow(tab1, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_flow(tab2, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_flow(tab3, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_gap(tab1, 10, 0);
+    lv_obj_set_style_pad_gap(tab2, 10, 0);
+    lv_obj_set_style_pad_gap(tab3, 10, 0);
+*/
 
 void destroy() {
     if (tabWatcher_task != nullptr) {
