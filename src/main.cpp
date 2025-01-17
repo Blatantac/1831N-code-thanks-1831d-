@@ -104,24 +104,26 @@ void disabled() {} // @note -> Potentially for selecting clsrt (dont trust me br
 
 void competition_initialize() {}
 
+
+// TODO: Add cases for all 12 tournament autons
 void autonomous() {  
     chassis.setPose(0, 0, 0); 
 
     switch (lemlib::selector::auton) {
         case 1:
-            RedLeft(); //runs red side red left code
+            red1(); //runs red side red left code
             break;
         case 2:
-            RedRight(); //runs red side autonomous 2 code
+            red2(); //runs red side autonomous 2 code
             break;
         case -1:
-            BlueLeft(); //runs blue side autonomous 1 code
+            blue1(); //runs blue side autonomous 1 code
             break;
         case -2:
-            BlueRight(); //runs blue side autonomous 2 code
+            blue2(); //runs blue side autonomous 2 code
             break;
         case 0:
-            Skills(); //runs skills autonomous code
+            skills(); //runs skills autonomous code
             break;
   }
 }

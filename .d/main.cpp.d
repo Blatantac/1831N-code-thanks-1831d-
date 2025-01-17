@@ -145,8 +145,7 @@ bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
  include/liblvgl/core/lv_event.h \
  include/liblvgl/extra/widgets/tabview/lv_tabview.h \
  include/robot-config.hpp include/main.h include/controls.hpp \
- include/autons.hpp include/lemlib/selector.hpp include/robot-config.hpp \
- include/controls.hpp
+ include/autons.hpp include/lemlib/selector.hpp
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -394,5 +393,3 @@ include/main.h:
 include/controls.hpp:
 include/autons.hpp:
 include/lemlib/selector.hpp:
-include/robot-config.hpp:
-include/controls.hpp:
