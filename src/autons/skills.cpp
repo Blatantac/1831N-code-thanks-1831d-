@@ -8,7 +8,7 @@
 
 
 // ------------------------- //
-// 1 ring Autonomous Routine //
+// Skills Autonomous Routine //
 // ------------------------- //
 
 int skills() {

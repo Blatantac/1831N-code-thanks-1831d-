@@ -8,7 +8,7 @@
 
 
 // ------------------------- //
-// 1 ring Autonomous Routine //
+// Red 6  Autonomous Routine //
 // ------------------------- //
 
 int red6() {

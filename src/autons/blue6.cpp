@@ -8,7 +8,7 @@
 
 
 // ------------------------- //
-// 1 ring Autonomous Routine //
+// Blue 6 Autonomous Routine //
 // ------------------------- //
 
 int blue6() {
