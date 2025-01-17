@@ -16,7 +16,6 @@
 // ----------------------------------------------------
 // IMPORTANT - Autonomous Selector Routine Declaration
 // ----------------------------------------------------
-#define AUTONS "Left", "Right", "Do Nothing" // Names of autons, up to 10
 
 LV_IMG_DECLARE(image); //TKSRC Logo
 
@@ -63,7 +62,10 @@ void initialize() {
     // TODO - LVGL INIT
     // -----------------------
 
-    const char* b[] = {AUTONS, ""}; // Names of autons, up to 10
+    const char* b[] = {
+        "Auton1", "Auton2", "Auton3", "\n",
+        "Auton4", "Auton5", "Auton6", nullptr
+    };
     lemlib::selector::init(1, b); // declaring default auton
 
     // TODO - temporary 

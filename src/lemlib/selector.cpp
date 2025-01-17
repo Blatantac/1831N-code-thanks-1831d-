@@ -41,7 +41,7 @@ void tabWatcher(void* param);
 
 pros::rtos::Task* tabWatcher_task = nullptr;
 
-const int MAX_AUTONS = 10;
+const int MAX_AUTONS = 100;
 const char* btnmMap[MAX_AUTONS];
 
 int motorUpdate();
@@ -49,16 +49,24 @@ int odomUpdate();
 int customUpdate();
 
 lv_obj_t* tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
+// Creating LVGL buttons & tab object
+
 lv_obj_t* redBtnm;
 lv_obj_t* blueBtnm;
 lv_obj_t* skillsBtnm;
 
 lv_obj_t* devTab = lv_tabview_add_tab(tabview, "Developer");
+lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
+lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
+lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
+lv_obj_t* bocchiTab = lv_tabview_add_tab(tabview, " ");
 
 // Instead of lv_obj_t *motor_temps_textarea = lv_textarea_create(devTab);
 lv_obj_t *motor_temps_textarea = lv_textarea_create(devTab);
 lv_obj_t *odom_textarea = lv_textarea_create(devTab);
 lv_obj_t *other_textarea = lv_textarea_create(devTab);
+
+lv_obj_t *red_textarea = lv_textarea_create(redTab);
 
 
 void log_error(const std::string& func_name, const std::string& msg) {
@@ -232,22 +240,33 @@ void init(int default_auton, const char** autons) {
         );
         lv_disp_set_theme(NULL, th);
 
-        // Creating LVGL buttons & tab object
-        lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
-        lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
-        lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
-        lv_obj_t* bocchiTab = lv_tabview_add_tab(tabview, " ");
-
         redBtnm = lv_btnmatrix_create(redTab);
         lv_btnmatrix_set_map(redBtnm, btnmMap);
-        lv_obj_set_size(redBtnm, 450, 100);
-        lv_obj_align(redBtnm, LV_ALIGN_CENTER, 0, 0);
+        lv_obj_set_size(redBtnm, 290,180);
+        lv_obj_align(redBtnm, LV_ALIGN_LEFT_MID, -15, 0);
         lv_btnmatrix_set_btn_ctrl_all(redBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(redBtnm, redBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
 
+        lv_obj_set_size(red_textarea, 180, 180);
+        lv_obj_align(red_textarea, LV_ALIGN_LEFT_MID, 280, 0);
+        
+        lv_textarea_add_text(red_textarea, "Very Good autonomous routine skibidi toilet 100 aura plus dorito ahoge");
+        lv_textarea_set_cursor_click_pos(red_textarea, false);
+        lv_textarea_set_password_mode(red_textarea, false);
+        lv_obj_add_state(red_textarea, LV_STATE_DISABLED);
+
+
+
+
+
+
+
+
+
+
         blueBtnm = lv_btnmatrix_create(blueTab);
         lv_btnmatrix_set_map(blueBtnm, btnmMap);
-        lv_obj_set_size(blueBtnm, 450, 100);
+        lv_obj_set_size(blueBtnm, 100, 300);
         lv_obj_align(blueBtnm, LV_ALIGN_CENTER, 0, 0);
         lv_btnmatrix_set_btn_ctrl_all(blueBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(blueBtnm, blueBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
@@ -255,7 +274,7 @@ void init(int default_auton, const char** autons) {
         static const char* skillsBtnmMap[] = {"Auton Skills", "Do Nothing", "Spin Intake", "", NULL};
         skillsBtnm = lv_btnmatrix_create(skillsTab);
         lv_btnmatrix_set_map(skillsBtnm, skillsBtnmMap);
-        lv_obj_set_size(skillsBtnm, 450, 100);
+        lv_obj_set_size(skillsBtnm, 100, 300);
         lv_obj_align(skillsBtnm, LV_ALIGN_CENTER, 0, 0);
         lv_btnmatrix_set_btn_ctrl_all(skillsBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(skillsBtnm, skillsBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
