@@ -350,6 +350,9 @@ void destroy() {
 }
 
 // Holy shit this is horrible but it fucking works so dont u dare touch it
+// @LycoKodo *wags finger* nuh uh (i didnt touch it dw)
+// TODO: make this less terrible            <-- this was an autocomplete suggested comment btw :skull:
+// TODO: figure out how to highlight which motor to prioritise cooling
 
 int motorUpdate() {
     int ret = 0;
@@ -438,6 +441,10 @@ int motorUpdate() {
         ret = 1;
     }
 
+    // @LycoKodo do we rlly need intake and wall mech? The hottest motors during the tournament are not going to be these two by a long shot
+    // @LycoKodo in the worst case we remove lady cuz intake can sometimes get hot as well, and replace lady temp with hottest motor
+    // @LycoKodo wdyt? 
+
     try {
         double current = intake.get_temperature();
         if (current == PROS_ERR_F) {
@@ -451,7 +458,7 @@ int motorUpdate() {
         ret = 1;
     }
 
-
+    // Note: IMO this is not rlly needed as in a tournament in a rush you will NOT prioritise cooling lady brown motor
     try {
         double current = lady.get_temperature();
         if (current == PROS_ERR_F) {
