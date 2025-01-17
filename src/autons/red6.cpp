@@ -11,6 +11,8 @@
 // Red 6  Autonomous Routine //
 // ------------------------- //
 
+// e.g. red right awp
+
 int red6() {
     
     return 0;

@@ -17,7 +17,12 @@ int red3();
 int red4();
 int red5();
 int red6();
-int skills();
+int skills1();
+int skills2();
+int skills3();
+int skills4();
+int skills5();
+int skills6();
 
 
 #endif // AUTONS_HPP

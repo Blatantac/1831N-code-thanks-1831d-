@@ -11,6 +11,8 @@
 // Red 2  Autonomous Routine //
 // ------------------------- //
 
+// e.g. red left
+
 int red2() {
     
     return 0;

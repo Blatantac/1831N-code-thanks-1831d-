@@ -11,6 +11,8 @@
 // Blue 3 Autonomous Routine //
 // ------------------------- //
 
+// e.g. goal rush
+
 int blue3() {
     
     return 0;

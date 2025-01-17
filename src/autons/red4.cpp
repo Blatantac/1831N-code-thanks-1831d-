@@ -11,6 +11,8 @@
 // Red 4  Autonomous Routine //
 // ------------------------- //
 
+// e.g. normal rush
+
 int red4() {
     
     return 0;

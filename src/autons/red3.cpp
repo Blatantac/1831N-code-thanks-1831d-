@@ -11,6 +11,8 @@
 // Red 3  Autonomous Routine //
 // ------------------------- //
 
+// e.g. goal rush
+
 int red3() {
     
     return 0;

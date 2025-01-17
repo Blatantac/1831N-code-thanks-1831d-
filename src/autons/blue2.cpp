@@ -11,6 +11,8 @@
 // Blue 2 Autonomous Routine //
 // ------------------------- //
 
+// e.g. normal blue right
+
 int blue2() {
     
     return 0;

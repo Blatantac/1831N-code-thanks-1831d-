@@ -11,6 +11,8 @@
 // Blue 5 Autonomous Routine //
 // ------------------------- //
 
+// e.g. blue left awp
+
 int blue5() {
     
     return 0;

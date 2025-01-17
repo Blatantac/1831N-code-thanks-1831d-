@@ -123,7 +123,7 @@ void autonomous() {
             blue2(); //runs blue side autonomous 2 code
             break;
         case 0:
-            skills(); //runs skills autonomous code
+            skills1(); //runs skills autonomous code
             break;
   }
 }

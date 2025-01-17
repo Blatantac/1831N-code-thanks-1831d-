@@ -11,7 +11,9 @@
 // Blue 1 Autonomous Routine //
 // ------------------------- //
 
-int red1() {
+// e.g. normal blue left
+
+int blue1() {
     
     return 0;
 }
