@@ -12,6 +12,8 @@
 #include "liblvgl/widgets/lv_btnmatrix.h"
 #include "liblvgl/widgets/lv_textarea.h"
 
+#include "robot-config.hpp"
+
 LV_IMG_DECLARE(dorito); //TKSRC Logo
 
 namespace lemlib::selector {
@@ -42,10 +44,22 @@ pros::rtos::Task* tabWatcher_task = nullptr;
 const int MAX_AUTONS = 10;
 const char* btnmMap[MAX_AUTONS];
 
-lv_obj_t* tabview;
+int motorUpdate();
+int odomUpdate();
+int customUpdate();
+
+lv_obj_t* tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
 lv_obj_t* redBtnm;
 lv_obj_t* blueBtnm;
 lv_obj_t* skillsBtnm;
+
+lv_obj_t* devTab = lv_tabview_add_tab(tabview, "Developer");
+
+// Instead of lv_obj_t *motor_temps_textarea = lv_textarea_create(devTab);
+lv_obj_t *motor_temps_textarea = lv_textarea_create(devTab);
+lv_obj_t *odom_textarea = lv_textarea_create(devTab);
+lv_obj_t *other_textarea = lv_textarea_create(devTab);
+
 
 void log_error(const std::string& func_name, const std::string& msg) {
     std::cerr << "[ERROR] in function " << func_name << ": " << msg << std::endl;
@@ -174,19 +188,20 @@ void tabWatcher(void* param) {
             }
 
             // Handle actions for the active tab
-            if (activeTab == 0 && currentRedButton < UINT16_MAX) {
+            if (activeTab == 1 && currentRedButton < UINT16_MAX) {
                 deselect_all_buttons(redBtnm);
                 lv_btnmatrix_set_btn_ctrl(redBtnm, currentRedButton, LV_BTNMATRIX_CTRL_CHECKED);
-            } else if (activeTab == 1 && currentBlueButton < UINT16_MAX) {
+            } else if (activeTab == 2 && currentBlueButton < UINT16_MAX) {
                 deselect_all_buttons(blueBtnm);
                 lv_btnmatrix_set_btn_ctrl(blueBtnm, currentBlueButton, LV_BTNMATRIX_CTRL_CHECKED);
-            } else if (activeTab == 2 && currentSKillsButton < UINT16_MAX) {
+            } else if (activeTab == 3 && currentSKillsButton < UINT16_MAX) {
                 deselect_all_buttons(skillsBtnm);
                 lv_btnmatrix_set_btn_ctrl(skillsBtnm, currentSKillsButton, LV_BTNMATRIX_CTRL_CHECKED);
-            } else if (activeTab == 3) {
-                // TODO - WIP
+            } else if (activeTab == 0) {
+                // TODO - Dev Tab
+                motorUpdate();
+                odomUpdate();
             }
-
             pros::delay(10);
         }
     } catch (const std::exception& ex) {
@@ -218,11 +233,9 @@ void init(int default_auton, const char** autons) {
         lv_disp_set_theme(NULL, th);
 
         // Creating LVGL buttons & tab object
-        tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
         lv_obj_t* redTab = lv_tabview_add_tab(tabview, "Red");
         lv_obj_t* blueTab = lv_tabview_add_tab(tabview, "Blue");
         lv_obj_t* skillsTab = lv_tabview_add_tab(tabview, "Skills");
-        lv_obj_t* devTab = lv_tabview_add_tab(tabview, "Developer");
         lv_obj_t* bocchiTab = lv_tabview_add_tab(tabview, " ");
 
         redBtnm = lv_btnmatrix_create(redTab);
@@ -256,9 +269,8 @@ void init(int default_auton, const char** autons) {
         const int top_height = height / 2; // Top height for Odometry
 
         // Create "Motor Temps" text area
-        lv_obj_t *motor_temps_textarea = lv_textarea_create(devTab);
-        lv_obj_set_size(motor_temps_textarea, left_width - 30, 170);
-        lv_obj_align(motor_temps_textarea, LV_ALIGN_TOP_LEFT, -10, -10);
+        lv_obj_set_size(motor_temps_textarea, left_width - 30, 177);
+        lv_obj_align(motor_temps_textarea, LV_ALIGN_TOP_LEFT, -12, -12);
         lv_textarea_add_text(motor_temps_textarea, "Left 1: \n");
         lv_textarea_add_text(motor_temps_textarea, "Left 2: \n");
         lv_textarea_add_text(motor_temps_textarea, "Left 3: \n");
@@ -272,9 +284,8 @@ void init(int default_auton, const char** autons) {
         lv_textarea_set_password_mode(motor_temps_textarea, false);
         lv_obj_add_state(motor_temps_textarea, LV_STATE_DISABLED);
 
-        lv_obj_t *odom_textarea = lv_textarea_create(devTab);
-        lv_obj_set_size(odom_textarea, left_width, 70);
-        lv_obj_align(odom_textarea, LV_ALIGN_TOP_LEFT, 205, -10);
+        lv_obj_set_size(odom_textarea, left_width, 74);
+        lv_obj_align(odom_textarea, LV_ALIGN_TOP_LEFT, 203, -12);
         lv_textarea_add_text(odom_textarea, "X: \n");
         lv_textarea_add_text(odom_textarea, "Y: \n");
         lv_textarea_add_text(odom_textarea, "Theta: ");
@@ -283,9 +294,8 @@ void init(int default_auton, const char** autons) {
         lv_textarea_set_password_mode(odom_textarea, false);
         lv_obj_add_state(odom_textarea, LV_STATE_DISABLED);
 
-        lv_obj_t *other_textarea = lv_textarea_create(devTab);
-        lv_obj_set_size(other_textarea, left_width, 95);
-        lv_obj_align(other_textarea, LV_ALIGN_TOP_LEFT, 205, 65);
+        lv_obj_set_size(other_textarea, left_width, 100);
+        lv_obj_align(other_textarea, LV_ALIGN_TOP_LEFT, 203, 65);
         lv_textarea_add_text(other_textarea, "Alliance: \n");
         lv_textarea_add_text(other_textarea, "Lady Position: \n");
         lv_textarea_add_text(other_textarea, "Chassis Kp: \n");
@@ -296,31 +306,6 @@ void init(int default_auton, const char** autons) {
         lv_textarea_set_password_mode(other_textarea, false);
         lv_obj_add_state(other_textarea, LV_STATE_DISABLED);
 
-        // // Create "Odometry" text area
-        // lv_obj_t *odometry_label = lv_label_create(devTab);
-        // lv_label_set_text(odometry_label, "Odometry");
-        // lv_obj_align(odometry_label, LV_ALIGN_TOP_RIGHT, -right_width + 10, 10);
-
-        // lv_obj_t *odometry_textarea = lv_textarea_create(devTab);
-        // lv_obj_set_size(odometry_textarea, right_width - 20, top_height - 40);
-        // lv_obj_align(odometry_textarea, LV_ALIGN_TOP_RIGHT, -right_width + 10, 40);
-        // lv_textarea_set_text(odometry_textarea, "");
-        // lv_textarea_set_cursor_click_pos(odometry_textarea, false);
-        // lv_textarea_set_password_mode(odometry_textarea, false);
-        // lv_obj_add_state(odometry_textarea, LV_STATE_DISABLED);
-
-        // // Create "Macros" text area
-        // lv_obj_t *macros_label = lv_label_create(devTab);
-        // lv_label_set_text(macros_label, "Macros");
-        // lv_obj_align(macros_label, LV_ALIGN_BOTTOM_RIGHT, -right_width + 10, -top_height + 10);
-
-        // lv_obj_t *macros_textarea = lv_textarea_create(devTab);
-        // lv_obj_set_size(macros_textarea, right_width - 20, height - top_height - 40);
-        // lv_obj_align(macros_textarea, LV_ALIGN_BOTTOM_RIGHT, -right_width + 10, -top_height + 40);
-        // lv_textarea_set_text(macros_textarea, "");
-        // lv_textarea_set_cursor_click_pos(macros_textarea, false);
-        // lv_textarea_set_password_mode(macros_textarea, false);
-        // lv_obj_add_state(macros_textarea, LV_STATE_DISABLED);
 
         lv_obj_t *img = lv_img_create(bocchiTab);
         lv_img_set_src(img, &dorito); // Link to source image
@@ -337,37 +322,6 @@ void init(int default_auton, const char** autons) {
     }
 }
 
-/*
-    // Make tabs read-only
-    lv_tabview_set_btns_hidden(tabview, true);
-
-    // Create content for "Motor Temps" tab
-    lv_obj_t *motor_temp_label = lv_label_create(tab1);
-    lv_label_set_text(motor_temp_label, "Motor Temps:");
-    lv_obj_set_size(motor_temp_label, lv_pct(100), lv_pct(100));
-    lv_obj_align(motor_temp_label, LV_ALIGN_TOP_LEFT, 10, 10);
-
-    // Create content for "Odometry" tab
-    lv_obj_t *odometry_label = lv_label_create(tab2);
-    lv_label_set_text(odometry_label, "Odometry:");
-    lv_obj_set_size(odometry_label, lv_pct(100), lv_pct(100));
-    lv_obj_align(odometry_label, LV_ALIGN_TOP_LEFT, 10, 10);
-
-    // Create content for "Macros" tab
-    lv_obj_t *macros_label = lv_label_create(tab3);
-    lv_label_set_text(macros_label, "Macros:");
-    lv_obj_set_size(macros_label, lv_pct(100), lv_pct(100));
-    lv_obj_align(macros_label, LV_ALIGN_TOP_LEFT, 10, 10);
-
-    // Set split screen behavior
-    lv_obj_set_flex_flow(tab1, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_flow(tab2, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_flow(tab3, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_gap(tab1, 10, 0);
-    lv_obj_set_style_pad_gap(tab2, 10, 0);
-    lv_obj_set_style_pad_gap(tab3, 10, 0);
-*/
-
 void destroy() {
     if (tabWatcher_task != nullptr) {
         tabWatcher_task->remove();
@@ -375,5 +329,168 @@ void destroy() {
         tabWatcher_task = nullptr;
     }
 }
+
+// Holy shit this is horrible but it fucking works so dont u dare touch it
+
+int motorUpdate() {
+    int ret = 0;
+    lv_textarea_set_text(motor_temps_textarea, ""); // Clear the text area
+
+    std::vector<double> leftTemps = leftMotors.get_temperature_all();
+    std::vector<double> rightTemps = rightMotors.get_temperature_all();
+
+    char buffer[64]; // Buffer to hold formatted strings
+
+    try {
+        double current = leftTemps.at(0);
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Left 1: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Left 1: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Left 1: ERROR (OOR)\n");
+        ret = 1;
+    }
+
+    try {
+        double current = leftTemps.at(1);
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Left 2: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Left 2: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Left 2: ERROR (OOR)\n");
+        ret = 1;
+    }
+    
+    try {
+        double current = leftTemps.at(2);
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Left 3: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Left 3: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Left 3: ERROR (OOR)\n");
+        ret = 1;
+    }
+
+    try {
+        double current = rightTemps.at(0);
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Right 1: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Right 1: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Right 1: ERROR (OOR)\n");
+        ret = 1;
+    }
+
+    try {
+        double current = rightTemps.at(1);
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Right 2: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Right 2: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Right 2: ERROR (OOR)\n");
+        ret = 1;
+    }
+
+    try {
+        double current = rightTemps.at(2);
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Right 3: ERROR (PROS)\n---------------------------- \n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Right 3: %d\n---------------------------- \n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Right 3: ERROR (OOR)\n---------------------------- \n");
+        ret = 1;
+    }
+
+    try {
+        double current = intake.get_temperature();
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Intake: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Intake: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Intake: ERROR (OOR)\n");
+        ret = 1;
+    }
+
+
+    try {
+        double current = lady.get_temperature();
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "WallMech: ERROR (PROS)");
+        } else {
+            snprintf(buffer, sizeof(buffer), "WallMech: %d", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "WallMech: ERROR (OOR)");
+        ret = 1;
+    }
+
+    return ret;
+}
+
+int odomUpdate() {
+    char buffer[64]; // Buffer to hold formatted strings
+
+    lv_textarea_set_text(odom_textarea, ""); // Clear
+
+    snprintf(buffer, sizeof(buffer), "X: %f\n", chassis.getPose().x);
+    lv_textarea_add_text(odom_textarea, buffer);
+
+    snprintf(buffer, sizeof(buffer), "Y: %f\n", chassis.getPose().y);
+    lv_textarea_add_text(odom_textarea, buffer);
+
+    snprintf(buffer, sizeof(buffer), "Theta: %f", chassis.getPose().theta);
+    lv_textarea_add_text(odom_textarea, buffer);
+
+    return 0;
+}
+
+int customUpdate() {
+    lv_textarea_set_text(other_textarea, ""); // Clear
+
+    char buffer[64]; // Buffer to hold formatted strings
+
+    snprintf(buffer, sizeof(buffer), "Alliance: \n");
+    lv_textarea_add_text(other_textarea, buffer);
+
+    snprintf(buffer, sizeof(buffer), "Lady Position: \n");
+    lv_textarea_add_text(other_textarea, buffer);
+
+    snprintf(buffer, sizeof(buffer), "Chassis Kp: \n");
+    lv_textarea_add_text(other_textarea, buffer);
+
+    snprintf(buffer, sizeof(buffer), "Chassis Ki: \n");
+    lv_textarea_add_text(other_textarea, buffer);
+
+    snprintf(buffer, sizeof(buffer), "Chassis Kd: ");
+    lv_textarea_add_text(other_textarea, buffer);
+
+    return 0;
+}
+
+
+
+
 
 } // namespace lemlib::selector

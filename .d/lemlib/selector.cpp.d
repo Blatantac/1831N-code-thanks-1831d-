@@ -130,7 +130,19 @@ bin/lemlib/selector.cpp.o: src/lemlib/selector.cpp include/api.h \
  include/pros/rotation.hpp include/pros/rotation.h include/pros/rtos.hpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/liblvgl/core/lv_event.h \
- include/liblvgl/extra/widgets/tabview/lv_tabview.h
+ include/liblvgl/extra/widgets/tabview/lv_tabview.h \
+ include/robot-config.hpp include/main.h include/api.h \
+ include/lemlib/api.hpp include/lemlib/pid.hpp include/lemlib/pose.hpp \
+ include/lemlib/util.hpp include/lemlib/chassis/chassis.hpp \
+ include/pros/imu.hpp include/lemlib/asset.hpp \
+ include/lemlib/chassis/trackingWheel.hpp include/pros/motor_group.hpp \
+ include/pros/adi.hpp include/pros/rotation.hpp \
+ include/lemlib/exitcondition.hpp include/lemlib/driveCurve.hpp \
+ include/lemlib/logger/logger.hpp include/fmt/core.h include/fmt/format.h \
+ include/fmt/core.h include/fmt/format-inl.h \
+ include/lemlib/logger/baseSink.hpp include/fmt/args.h \
+ include/lemlib/logger/message.hpp include/lemlib/logger/infoSink.hpp \
+ include/lemlib/logger/telemetrySink.hpp include/lemlib/smartMotor.hpp
 include/api.h:
 include/pros/adi.h:
 include/pros/colors.h:
@@ -346,3 +358,30 @@ include/pros/vision.hpp:
 include/pros/vision.h:
 include/liblvgl/core/lv_event.h:
 include/liblvgl/extra/widgets/tabview/lv_tabview.h:
+include/robot-config.hpp:
+include/main.h:
+include/api.h:
+include/lemlib/api.hpp:
+include/lemlib/pid.hpp:
+include/lemlib/pose.hpp:
+include/lemlib/util.hpp:
+include/lemlib/chassis/chassis.hpp:
+include/pros/imu.hpp:
+include/lemlib/asset.hpp:
+include/lemlib/chassis/trackingWheel.hpp:
+include/pros/motor_group.hpp:
+include/pros/adi.hpp:
+include/pros/rotation.hpp:
+include/lemlib/exitcondition.hpp:
+include/lemlib/driveCurve.hpp:
+include/lemlib/logger/logger.hpp:
+include/fmt/core.h:
+include/fmt/format.h:
+include/fmt/core.h:
+include/fmt/format-inl.h:
+include/lemlib/logger/baseSink.hpp:
+include/fmt/args.h:
+include/lemlib/logger/message.hpp:
+include/lemlib/logger/infoSink.hpp:
+include/lemlib/logger/telemetrySink.hpp:
+include/lemlib/smartMotor.hpp:
