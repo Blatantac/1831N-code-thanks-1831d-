@@ -532,7 +532,7 @@ int customUpdate() {
 // and it fails (most surely), please increase this counter       //
 // as a warning for the next person:                              //
 //                                                                //
-// total_hours_waster_here = 5                                    //
+// total_hours_wasted_here = 5                                    //
 //                                                                //
 //----------------------------------------------------------------//
 
