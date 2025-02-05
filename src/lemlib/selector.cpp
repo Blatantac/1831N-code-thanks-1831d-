@@ -67,6 +67,8 @@ lv_obj_t *odom_textarea = lv_textarea_create(devTab);
 lv_obj_t *other_textarea = lv_textarea_create(devTab);
 
 lv_obj_t *red_textarea = lv_textarea_create(redTab);
+lv_obj_t *blue_textarea = lv_textarea_create(blueTab);
+lv_obj_t *skills_textarea = lv_textarea_create(skillsTab);
 
 
 void log_error(const std::string& func_name, const std::string& msg) {
@@ -254,29 +256,39 @@ void init(int default_auton, const char** autons) {
         lv_textarea_set_password_mode(red_textarea, false);
         lv_obj_add_state(red_textarea, LV_STATE_DISABLED);
 
-
-
-
-
-
-
-
-
-
         blueBtnm = lv_btnmatrix_create(blueTab);
         lv_btnmatrix_set_map(blueBtnm, btnmMap);
-        lv_obj_set_size(blueBtnm, 100, 300);
-        lv_obj_align(blueBtnm, LV_ALIGN_CENTER, 0, 0);
+        lv_obj_set_size(blueBtnm, 290, 180);
+        lv_obj_align(blueBtnm, LV_ALIGN_LEFT_MID, -15, 0);
         lv_btnmatrix_set_btn_ctrl_all(blueBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(blueBtnm, blueBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
 
-        static const char* skillsBtnmMap[] = {"Auton Skills", "Do Nothing", "Spin Intake", "", NULL};
+        lv_obj_set_size(blue_textarea, 180, 180);
+        lv_obj_align(blue_textarea, LV_ALIGN_LEFT_MID, 280, 0);
+        
+        lv_textarea_add_text(blue_textarea, "Very Good autonomous routine skibidi toilet 100 aura plus dorito ahoge");
+        lv_textarea_set_cursor_click_pos(blue_textarea, false);
+        lv_textarea_set_password_mode(blue_textarea, false);
+        lv_obj_add_state(blue_textarea, LV_STATE_DISABLED);
+
+        static const char* skillsBtnmMap[] = {"Auton Skills", "Spin Intake", "Skills 1", "Skills 2", "Skills 3", "Skills 4", NULL};
+
+        //TODO: ^^^^^^^^^^^ Make this the same as Red and blue tabs meaning move the button map to main.cpp
+
         skillsBtnm = lv_btnmatrix_create(skillsTab);
         lv_btnmatrix_set_map(skillsBtnm, skillsBtnmMap);
-        lv_obj_set_size(skillsBtnm, 100, 300);
-        lv_obj_align(skillsBtnm, LV_ALIGN_CENTER, 0, 0);
+        lv_obj_set_size(skillsBtnm, 290, 180);
+        lv_obj_align(skillsBtnm, LV_ALIGN_LEFT_MID, -15, 0);
         lv_btnmatrix_set_btn_ctrl_all(skillsBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
         lv_obj_add_event_cb(skillsBtnm, skillsBtnmAction, LV_EVENT_VALUE_CHANGED, NULL);
+
+        lv_obj_set_size(skills_textarea, 180, 180);
+        lv_obj_align(skills_textarea, LV_ALIGN_LEFT_MID, 280, 0);
+        
+        lv_textarea_add_text(skills_textarea, "Very Good autonomous routine skibidi toilet 100 aura plus dorito ahoge");
+        lv_textarea_set_cursor_click_pos(skills_textarea, false);
+        lv_textarea_set_password_mode(skills_textarea, false);
+        lv_obj_add_state(skills_textarea, LV_STATE_DISABLED);
 
         // Define layout dimensions for L-shaped split screen
         const int width = 480;
