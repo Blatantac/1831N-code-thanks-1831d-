@@ -16,6 +16,11 @@
 
 LV_IMG_DECLARE(dorito); //TKSRC Logo
 
+/**
+ * @brief THIS IS A TODO LIST
+ * [] - TODO - Make different btnmtrx for different tabs, rn its just standard, and make it in main
+ */
+
 namespace lemlib::selector {
 
 // TODO - Refactoring into OOP
