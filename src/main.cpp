@@ -14,7 +14,7 @@
 #include "autons.hpp"
 
 
-// THIS CODE IS POWERED BY A PROJECT MANGER POWERED BY 
+// THIS CODE IS POWERED BY A PROJECT MANAGER AND TWO DORITO FANS POWERED BY 
 
 /*
          __                              ___   __        .ama     ,
@@ -30,6 +30,34 @@
 ]88,          _,,aaaaaa,_       I88 8"  8 ]P'  .d' 88 88' ,8' I[
 `888a,.  ,aadd88888888888bma.   )88,  ,]I I8, .d' )88a8B ,d8 aI
   "888888PP"'        `8""""""8   "888PP'  `888P'  `88P"88P"8m"
+*/
+// AND
+/*                                                                                                                                    
+                                                                                                                                             
+                                              -                                                                              
+                                             --                                                                              
+                                            --.-                                                                             
+                                           -- .:-                                                                            
+                                          -- ...:-                                                                           
+                                          - .....--                                                                          
+                                        -:...... --                                                                         
+                                        -  .  ... --                                                                        
+                                      -   ...  ..   -                                                                        
+                                      -:   ....  ..  -                                                                       
+                                     -- .. ....  . . .-                                                             
+                                    :- . .  ... ......--                                                              
+                                    -... . .... ... .. --                                                            
+                                  --:..... ... .. ..... --                                                      
+                                  -.....  .... ......... --                                                                 
+                                 -- ..   ....... ....  . --                                                                  
+                                -- ..   ....  ............:-                                                                 
+                               .- .. ..  ....  .... .......--                                                                
+                               -.... . ..... ....  . .......--                                                               
+                              -..... ............... .... .. --                                                              
+                             -:....... ..... ........... .... --                                                             
+                            -- .... ....... . ................ -                                                             
+                           --  ........ ................. ..... -                                                            
+                          ----------------------------------------                                                                                                                                   
 */
 
 // ----------------------------------------------------
@@ -85,6 +113,15 @@ void initialize() {
         "Auton1", "Auton2", "Auton3", "\n",
         "Auton4", "Auton5", "Auton6", nullptr
     };
+    static const char* redBtnmMap[] = {
+        "R-Auton1", "R-Auton2", "R-Auton3", "\n",
+        "R-Auton4", "R-Auton5", "R-Auton6", nullptr
+    };
+    static const char* blueBtnmMap[] = {
+        "B-Auton1", "B-Auton2", "B-Auton3", "\n",
+        "B-Auton4", "B-Auton5", "B-Auton6", nullptr
+    };
+
     lemlib::selector::init(1, b); // declaring default auton
 
     // TODO - temporary 

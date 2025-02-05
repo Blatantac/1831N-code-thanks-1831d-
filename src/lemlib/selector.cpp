@@ -251,7 +251,7 @@ void init(int default_auton, const char** autons) {
         lv_obj_set_size(red_textarea, 180, 180);
         lv_obj_align(red_textarea, LV_ALIGN_LEFT_MID, 280, 0);
         
-        lv_textarea_add_text(red_textarea, "Very Good autonomous routine skibidi toilet 100 aura plus dorito ahoge");
+        lv_textarea_add_text(red_textarea, "Greetings Adventure. Here lies the great RED alliance autonomous routines");
         lv_textarea_set_cursor_click_pos(red_textarea, false);
         lv_textarea_set_password_mode(red_textarea, false);
         lv_obj_add_state(red_textarea, LV_STATE_DISABLED);
@@ -266,15 +266,15 @@ void init(int default_auton, const char** autons) {
         lv_obj_set_size(blue_textarea, 180, 180);
         lv_obj_align(blue_textarea, LV_ALIGN_LEFT_MID, 280, 0);
         
-        lv_textarea_add_text(blue_textarea, "Very Good autonomous routine skibidi toilet 100 aura plus dorito ahoge");
+        lv_textarea_add_text(blue_textarea, "Greetings Adventure. Here lies the great BLUE alliance autonomous routines");
         lv_textarea_set_cursor_click_pos(blue_textarea, false);
         lv_textarea_set_password_mode(blue_textarea, false);
         lv_obj_add_state(blue_textarea, LV_STATE_DISABLED);
 
-        static const char* skillsBtnmMap[] = {"Auton Skills", "Spin Intake", "Skills 1", "Skills 2", "Skills 3", "Skills 4", NULL};
-
-        //TODO: ^^^^^^^^^^^ Make this the same as Red and blue tabs meaning move the button map to main.cpp
-
+        static const char* skillsBtnmMap[] = {
+            "Auton", "Preload", "Skills 1", "\n",  
+            "Skills 2", "Skills 3", "Skills 4", nullptr
+        };
         skillsBtnm = lv_btnmatrix_create(skillsTab);
         lv_btnmatrix_set_map(skillsBtnm, skillsBtnmMap);
         lv_obj_set_size(skillsBtnm, 290, 180);
@@ -285,7 +285,7 @@ void init(int default_auton, const char** autons) {
         lv_obj_set_size(skills_textarea, 180, 180);
         lv_obj_align(skills_textarea, LV_ALIGN_LEFT_MID, 280, 0);
         
-        lv_textarea_add_text(skills_textarea, "Very Good autonomous routine skibidi toilet 100 aura plus dorito ahoge");
+        lv_textarea_add_text(skills_textarea, "Greetings Adventure. Here lies the great SKILLS autonomous routines");
         lv_textarea_set_cursor_click_pos(skills_textarea, false);
         lv_textarea_set_password_mode(skills_textarea, false);
         lv_obj_add_state(skills_textarea, LV_STATE_DISABLED);
