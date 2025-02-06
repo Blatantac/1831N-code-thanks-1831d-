@@ -18,7 +18,10 @@ LV_IMG_DECLARE(dorito); //TKSRC Logo
 
 /**
  * @brief THIS IS A TODO LIST
+ * [] - TODO - Add selector to controller screen
  * [] - TODO - Make different btnmtrx for different tabs, rn its just standard, and make it in main
+ * [] - TODO - LOW PRIORITY - (in main.cpp) put in all cases of auton (RED AND BLUE 1-6) for caseswitch
+ * [] - TODO - LOW PRIORITY - (in main.cpp) add a case for the "Skills" tab
  */
 
 namespace lemlib::selector {
