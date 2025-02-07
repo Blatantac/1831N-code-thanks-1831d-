@@ -109,20 +109,35 @@ void initialize() {
     // TODO - LVGL INIT
     // -----------------------
 
-    const char* b[] = {
-        "Auton1", "Auton2", "Auton3", "\n",
-        "Auton4", "Auton5", "Auton6", nullptr
-    };
+
     static const char* redBtnmMap[] = {
         "R-Auton1", "R-Auton2", "R-Auton3", "\n",
         "R-Auton4", "R-Auton5", "R-Auton6", nullptr
     };
+    static const char* redBtnmDesc[] = {
+        "R-Auton1", "R-Auton2", "R-Auton3",
+        "R-Auton4", "R-Auton5", "R-Auton6", nullptr
+    };
+
     static const char* blueBtnmMap[] = {
         "B-Auton1", "B-Auton2", "B-Auton3", "\n",
         "B-Auton4", "B-Auton5", "B-Auton6", nullptr
     };
+    static const char* blueBtnmDesc[] = {
+        "R-Auton1", "R-Auton2", "R-Auton3",
+        "R-Auton4", "R-Auton5", "R-Auton6", nullptr
+    };
 
-    lemlib::selector::init(1, b); // declaring default auton
+    static const char* skillsBtnmMap[] = {
+        "Auton", "Preload", "Skills 1", "\n",  
+        "Skills 2", "Skills 3", "Skills 4", nullptr
+    };
+    static const char* skillsBtnmDesc[] = {
+        "Auton", "Preload", "Skills 1",  
+        "Skills 2", "Skills 3", "Skills 4", nullptr
+    };
+
+    lemlib::selector::init(1, redBtnmMap, blueBtnmMap, skillsBtnmMap, redBtnmDesc, blueBtnmDesc, skillsBtnmDesc); // declaring default auton
 
     // TODO - temporary 
     pros::Task watcher(autonwatcher);

@@ -33,21 +33,24 @@ extern uint16_t currentBlueButton;
 
 extern pros::rtos::Task* tabWatcher_task;
 
-constexpr int MAX_AUTONS = 10;
-extern const char* btnmMap[MAX_AUTONS];
+constexpr int MAX_AUTONS = 100;
+extern const char* redBtnmMap[MAX_AUTONS];
+extern const char* blueBtnmMap[MAX_AUTONS];
 
 extern lv_obj_t* tabview;
 extern lv_obj_t* redBtnm;
 extern lv_obj_t* blueBtnm;
 
 // Function declarations
+int textUpdate();
 void log_error(const std::string& func_name, const std::string& msg);
 uint16_t get_button_count(lv_obj_t* btnm);
 void deselect_all_buttons(lv_obj_t* btnm);
 void redBtnmAction(lv_event_t* e);
 void blueBtnmAction(lv_event_t* e);
 void tabWatcher(void* param);
-void init(int default_auton, const char** autons);
+void init(int default_auton, const char** redAutons, const char** blueAutons, const char** skillsAutons,
+            const char** redDesc, const char** blueDesc, const char** skillsDesc);
 void destroy();
 
 } // namespace lemlib::selector

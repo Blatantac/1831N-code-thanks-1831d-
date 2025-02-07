@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <sys/_intsup.h>
 #include "api.h"
 #include "liblvgl/core/lv_event.h"
 #include "liblvgl/core/lv_obj.h"
@@ -50,11 +51,18 @@ void tabWatcher(void* param);
 pros::rtos::Task* tabWatcher_task = nullptr;
 
 const int MAX_AUTONS = 100;
-const char* btnmMap[MAX_AUTONS];
+const char* redBtnmMap[MAX_AUTONS];
+const char* blueBtnmMap[MAX_AUTONS];
+const char* skillsBtnmMap[MAX_AUTONS];
+
+const char* redBtnmDesc[MAX_AUTONS];
+const char* blueBtnmDesc[MAX_AUTONS];   
+const char* skillsBtnmDesc[MAX_AUTONS];
 
 int motorUpdate();
 int odomUpdate();
 int customUpdate();
+int textUpdate();
 
 lv_obj_t* tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
 // Creating LVGL buttons & tab object
@@ -118,7 +126,7 @@ void redBtnmAction(lv_event_t* e) {
         currentSKillsButton = UINT16_MAX;
 
         for (int i = 0; i < autonCount; i++) {
-            if (strcmp(txt, btnmMap[i]) == 0) {
+            if (strcmp(txt, redBtnmMap[i]) == 0) {
                 auton = i + 1; // determining what program/routine is ran
                 autonState = RED;
                 break;
@@ -147,7 +155,7 @@ void blueBtnmAction(lv_event_t* e) {
         currentRedButton = UINT16_MAX;
         currentSKillsButton = UINT16_MAX;
         for (int i = 0; i < autonCount; i++) {
-            if (strcmp(txt, btnmMap[i]) == 0) {
+            if (strcmp(txt, blueBtnmMap[i]) == 0) {
                 auton = -(i + 1);
                 autonState = BLUE;
                 break;
@@ -204,7 +212,6 @@ void tabWatcher(void* param) {
             if (currentTab != activeTab) {
                 activeTab = currentTab;
             }
-
             // Handle actions for the active tab
             if (activeTab == 1 && currentRedButton < UINT16_MAX) {
                 deselect_all_buttons(redBtnm);
@@ -219,6 +226,7 @@ void tabWatcher(void* param) {
                 motorUpdate();
                 odomUpdate();
             }
+            textUpdate();
             pros::delay(10);
         }
     } catch (const std::exception& ex) {
@@ -227,13 +235,43 @@ void tabWatcher(void* param) {
 }
 
 
-void init(int default_auton, const char** autons) {
+void init(int default_auton, const char** redAutons, const char** blueAutons, const char** skillsAutons,
+            const char** redDesc, const char** blueDesc, const char** skillsDesc) {    
     try {
+        // For button names
         int i = 0;
-        while (autons[i] != nullptr && i < MAX_AUTONS) {
-            btnmMap[i] = autons[i];
+        while (blueAutons[i] != nullptr && i < MAX_AUTONS) {
+            blueBtnmMap[i] = blueAutons[i];
             i++;
         }
+        i = 0;
+        while (redAutons[i] != nullptr && i < MAX_AUTONS) {
+            redBtnmMap[i] = redAutons[i];
+            i++;
+        }
+        i = 0;
+        while (skillsAutons[i] != nullptr && i < MAX_AUTONS) {
+            skillsBtnmMap[i] = skillsAutons[i];
+            i++;
+        }
+
+        // For button descriptions
+        i = 0;
+        while (redDesc[i] != nullptr && i < MAX_AUTONS) {
+            redBtnmDesc[i] = redDesc[i];
+            i++;
+        }
+        i = 0;
+        while (blueDesc[i] != nullptr && i < MAX_AUTONS) {
+            blueBtnmDesc[i] = blueDesc[i];
+            i++;
+        }
+        i = 0;
+        while (skillsDesc[i] != nullptr && i < MAX_AUTONS) {
+            skillsBtnmDesc[i] = skillsDesc[i];
+            i++;
+        }
+
 
         autonCount = i;
         auton = default_auton;
@@ -250,7 +288,7 @@ void init(int default_auton, const char** autons) {
         lv_disp_set_theme(NULL, th);
 
         redBtnm = lv_btnmatrix_create(redTab);
-        lv_btnmatrix_set_map(redBtnm, btnmMap);
+        lv_btnmatrix_set_map(redBtnm, redBtnmMap);
         lv_obj_set_size(redBtnm, 290,180);
         lv_obj_align(redBtnm, LV_ALIGN_LEFT_MID, -15, 0);
         lv_btnmatrix_set_btn_ctrl_all(redBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
@@ -265,7 +303,7 @@ void init(int default_auton, const char** autons) {
         lv_obj_add_state(red_textarea, LV_STATE_DISABLED);
 
         blueBtnm = lv_btnmatrix_create(blueTab);
-        lv_btnmatrix_set_map(blueBtnm, btnmMap);
+        lv_btnmatrix_set_map(blueBtnm, blueBtnmMap);
         lv_obj_set_size(blueBtnm, 290, 180);
         lv_obj_align(blueBtnm, LV_ALIGN_LEFT_MID, -15, 0);
         lv_btnmatrix_set_btn_ctrl_all(blueBtnm, LV_BTNMATRIX_CTRL_CHECKABLE);
@@ -279,10 +317,6 @@ void init(int default_auton, const char** autons) {
         lv_textarea_set_password_mode(blue_textarea, false);
         lv_obj_add_state(blue_textarea, LV_STATE_DISABLED);
 
-        static const char* skillsBtnmMap[] = {
-            "Auton", "Preload", "Skills 1", "\n",  
-            "Skills 2", "Skills 3", "Skills 4", nullptr
-        };
         skillsBtnm = lv_btnmatrix_create(skillsTab);
         lv_btnmatrix_set_map(skillsBtnm, skillsBtnmMap);
         lv_obj_set_size(skillsBtnm, 290, 180);
@@ -534,6 +568,33 @@ int customUpdate() {
     return 0;
 }
 
+int textUpdate() {
+    int activeTab = lv_tabview_get_tab_act(tabview);
+    if (activeTab == 0) {
+        motorUpdate();
+        odomUpdate();
+        customUpdate();
+    } else if (activeTab == 1) {
+        // Update text for Red tab
+        lv_textarea_set_text(red_textarea, ""); // Clear the text area
+        if (currentRedButton < autonCount) {
+            lv_textarea_add_text(red_textarea, redBtnmDesc[currentRedButton]);
+        }
+    } else if (activeTab == 2) {
+        // Update text for Blue tab
+        lv_textarea_set_text(blue_textarea, ""); // Clear the text area
+        if (currentBlueButton < autonCount) {
+            lv_textarea_add_text(blue_textarea, blueBtnmDesc[currentBlueButton]);
+        }
+    } else if (activeTab == 3) {
+        // Update text for Skills tab
+        lv_textarea_set_text(skills_textarea, ""); // Clear the text area
+        if (currentSKillsButton < autonCount) {
+            lv_textarea_add_text(skills_textarea, skillsBtnmDesc[currentSKillsButton]);
+        }
+    }
+    return 0;
+}
 
 
 
