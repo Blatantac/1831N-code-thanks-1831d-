@@ -35,12 +35,15 @@ namespace lemlib::selector {
 enum AutonState {
     NONE = 0,
     RED = 1,
-    BLUE = -1
+    BLUE = -1,
+    SKILLS = 101
 };
 
 AutonState autonState = NONE;
 int auton;
-int autonCount;
+int blueLength;
+int redLength;
+int skillsLength;
 
 uint16_t currentRedButton = UINT16_MAX; // button IDs for buttons selected rn
 uint16_t currentBlueButton = UINT16_MAX;
@@ -125,9 +128,11 @@ void redBtnmAction(lv_event_t* e) {
         currentBlueButton = UINT16_MAX;
         currentSKillsButton = UINT16_MAX;
 
-        for (int i = 0; i < autonCount; i++) {
+        for (int i = 0; i < redLength; i++) {
             if (strcmp(txt, redBtnmMap[i]) == 0) {
-                auton = i + 1; // determining what program/routine is ran
+                // HOLY SHT THIS IS BAD BUT IT WORKS
+                if (i > 3) auton = i;
+                else auton = i + 1; // determining what program/routine is ran
                 autonState = RED;
                 break;
             }
@@ -154,9 +159,10 @@ void blueBtnmAction(lv_event_t* e) {
         currentBlueButton = btn_id;
         currentRedButton = UINT16_MAX;
         currentSKillsButton = UINT16_MAX;
-        for (int i = 0; i < autonCount; i++) {
+        for (int i = 0; i < blueLength; i++) {
             if (strcmp(txt, blueBtnmMap[i]) == 0) {
-                auton = -(i + 1);
+                if (i > 3) auton = -(i);
+                else auton = -(i + 1);
                 autonState = BLUE;
                 break;
             }
@@ -183,22 +189,15 @@ void skillsBtnmAction(lv_event_t* e) {
         currentBlueButton = UINT16_MAX;
         currentRedButton = UINT16_MAX;
         currentSKillsButton = btn_id;
-
-        switch (btn_id) {
-            case 0:
-                auton = 11; // Auton Skills
+        
+        for (int i = 0; i < skillsLength; i++) {
+            if (strcmp(txt, skillsBtnmMap[i]) == 0) {
+                if (i > 3) auton = (i + 100); 
+                else auton = (i + 101);
+                autonState = SKILLS;
                 break;
-            case 1:
-                auton = 12; // Do Nothing
-                break;
-            case 2:
-                auton = 13; // Spin Intake
-                break;
-            default:
-                auton = 0;
-                break;
+            }   
         }
-        autonState = NONE;
     } catch (const std::exception& ex) {
         log_error("skillsBtnmAction", ex.what());
     }
@@ -227,6 +226,7 @@ void tabWatcher(void* param) {
                 odomUpdate();
             }
             textUpdate();
+            printf("Current Auton %i", auton);
             pros::delay(10);
         }
     } catch (const std::exception& ex) {
@@ -244,16 +244,21 @@ void init(int default_auton, const char** redAutons, const char** blueAutons, co
             blueBtnmMap[i] = blueAutons[i];
             i++;
         }
+        blueLength = i;
         i = 0;
+        
         while (redAutons[i] != nullptr && i < MAX_AUTONS) {
             redBtnmMap[i] = redAutons[i];
             i++;
         }
+        redLength = i;
         i = 0;
+
         while (skillsAutons[i] != nullptr && i < MAX_AUTONS) {
             skillsBtnmMap[i] = skillsAutons[i];
             i++;
         }
+        skillsLength = i;
 
         // For button descriptions
         i = 0;
@@ -272,8 +277,6 @@ void init(int default_auton, const char** redAutons, const char** blueAutons, co
             i++;
         }
 
-
-        autonCount = i;
         auton = default_auton;
         autonState = (auton > 0) ? RED : ((auton < 0) ? BLUE : NONE);
 
@@ -577,19 +580,19 @@ int textUpdate() {
     } else if (activeTab == 1) {
         // Update text for Red tab
         lv_textarea_set_text(red_textarea, ""); // Clear the text area
-        if (currentRedButton < autonCount) {
+        if (currentRedButton < redLength) {
             lv_textarea_add_text(red_textarea, redBtnmDesc[currentRedButton]);
         }
     } else if (activeTab == 2) {
         // Update text for Blue tab
         lv_textarea_set_text(blue_textarea, ""); // Clear the text area
-        if (currentBlueButton < autonCount) {
+        if (currentBlueButton < blueLength) {
             lv_textarea_add_text(blue_textarea, blueBtnmDesc[currentBlueButton]);
         }
     } else if (activeTab == 3) {
         // Update text for Skills tab
         lv_textarea_set_text(skills_textarea, ""); // Clear the text area
-        if (currentSKillsButton < autonCount) {
+        if (currentSKillsButton < skillsLength) {
             lv_textarea_add_text(skills_textarea, skillsBtnmDesc[currentSKillsButton]);
         }
     }

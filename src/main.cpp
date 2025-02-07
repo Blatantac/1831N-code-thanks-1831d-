@@ -176,27 +176,48 @@ void disabled() {} // @note -> Potentially for selecting clsrt (dont trust me br
 void competition_initialize() {}
 
 
-// TODO: Add cases for all 12 tournament autons
 void autonomous() {  
     chassis.setPose(0, 0, 0); 
 
-    switch (lemlib::selector::auton) {
-        case 1:
-            red1(); //runs red side red left code
-            break;
-        case 2:
-            red2(); //runs red side autonomous 2 code
-            break;
-        case -1:
-            blue1(); //runs blue side autonomous 1 code
-            break;
-        case -2:
-            blue2(); //runs blue side autonomous 2 code
-            break;
-        case 0:
-            skills1(); //runs skills autonomous code
-            break;
-  }
+    int auton = lemlib::selector::auton;
+    
+    if (auton >= 1 && auton <= 100) {
+        switch (auton) {
+            case 1: red1(); break;
+            case 2: red2(); break;
+            case 3: red3(); break;
+            case 4: red4(); break;
+            case 5: red5(); break;
+            case 6: red6(); break;
+            // add more red cases as needed up to 100
+        }
+    }
+    else if (auton >= -100 && auton <= -1) {
+        switch (auton) {
+            case -1: blue1(); break;
+            case -2: blue2(); break;
+            case -3: blue3(); break;
+            case -4: blue4(); break;
+            case -5: blue5(); break;
+            case -6: blue6(); break;
+            // add more blue cases as needed up to -100
+        }
+    }
+    else if (auton >= 101 && auton <= 201) {
+        switch (auton) {
+            case 101: skills1(); break;
+            case 102: skills2(); break;
+            case 103: skills3(); break;
+            case 104: skills4(); break;
+            case 105: skills5(); break;
+            case 106: skills6(); break;
+            // add more skills cases as needed up to 106
+        }
+    }
+    else {
+        // Default auton
+        auton1ring();
+    }
 }
 
 void opcontrol() {
