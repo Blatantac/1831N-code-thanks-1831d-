@@ -9,8 +9,7 @@ If you decide to use our code, please consider **starring our project** (and lem
 ---
 
 ## License
-This project is licensed under the MIT license. Check [LICENSE](https://github.com/LemLib/LemLib/blob/master/LICENSE) for more details.
-
+This project is licensed under the MIT license. Check [LICENSE] (https://github.com/1831-Code-Community/1831-Common-Codebase/blob/main/LICENSE) for more details.
 
 ## Table of Contents  
 
