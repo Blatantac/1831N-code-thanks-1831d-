@@ -13,10 +13,56 @@
 #include "controls.hpp"
 #include "autons.hpp"
 
+
+// THIS CODE IS POWERED BY A PROJECT MANAGER AND TWO DORITO FANS POWERED BY 
+
+/*
+         __                              ___   __        .ama     ,
+      ,d888a                          ,d88888888888ba.  ,88"I)   d
+     a88']8i                         a88".8"8)   `"8888:88  " _a8'
+   .d8P' PP                        .d8P'.8  d)      "8:88:baad8P'
+  ,d8P' ,ama,   .aa,  .ama.g ,mmm  d8P' 8  .8'        88):888P'
+ ,d88' d8[ "8..a8"88 ,8I"88[ I88' d88   ]IaI"        d8[         
+ a88' dP "bm8mP8'(8'.8I  8[      d88'    `"         .88          
+,88I ]8'  .d'.8     88' ,8' I[  ,88P ,ama    ,ama,  d8[  .ama.g
+[88' I8, .d' ]8,  ,88B ,d8 aI   (88',88"8)  d8[ "8. 88 ,8I"88[
+]88  `888P'  `8888" "88P"8m"    I88 88[ 8[ dP "bm8m88[.8I  8[
+]88,          _,,aaaaaa,_       I88 8"  8 ]P'  .d' 88 88' ,8' I[
+`888a,.  ,aadd88888888888bma.   )88,  ,]I I8, .d' )88a8B ,d8 aI
+  "888888PP"'        `8""""""8   "888PP'  `888P'  `88P"88P"8m"
+*/
+// AND
+/*                                                                                                                                    
+                                                                                                                                             
+                                              -                                                                              
+                                             --                                                                              
+                                            --.-                                                                             
+                                           -- .:-                                                                            
+                                          -- ...:-                                                                           
+                                          - .....--                                                                          
+                                        -:...... --                                                                         
+                                        -  .  ... --                                                                        
+                                      -   ...  ..   -                                                                        
+                                      -:   ....  ..  -                                                                       
+                                     -- .. ....  . . .-                                                             
+                                    :- . .  ... ......--                                                              
+                                    -... . .... ... .. --                                                            
+                                  --:..... ... .. ..... --                                                      
+                                  -.....  .... ......... --                                                                 
+                                 -- ..   ....... ....  . --                                                                  
+                                -- ..   ....  ............:-                                                                 
+                               .- .. ..  ....  .... .......--                                                                
+                               -.... . ..... ....  . .......--                                                               
+                              -..... ............... .... .. --                                                              
+                             -:....... ..... ........... .... --                                                             
+                            -- .... ....... . ................ -                                                             
+                           --  ........ ................. ..... -                                                            
+                          ----------------------------------------                                                                                                                                   
+*/
+
 // ----------------------------------------------------
 // IMPORTANT - Autonomous Selector Routine Declaration
 // ----------------------------------------------------
-#define AUTONS "Left", "Right", "Do Nothing" // Names of autons, up to 10
 
 LV_IMG_DECLARE(image); //TKSRC Logo
 
@@ -63,8 +109,35 @@ void initialize() {
     // TODO - LVGL INIT
     // -----------------------
 
-    const char* b[] = {AUTONS, ""}; // Names of autons, up to 10
-    lemlib::selector::init(1, b); // declaring default auton
+
+    static const char* redBtnmMap[] = {
+        "R-Auton1", "R-Auton2", "R-Auton3", "\n",
+        "R-Auton4", "R-Auton5", "R-Auton6", nullptr
+    };
+    static const char* redBtnmDesc[] = {
+        "R-Auton1", "R-Auton2", "R-Auton3",
+        "R-Auton4", "R-Auton5", "R-Auton6", nullptr
+    };
+
+    static const char* blueBtnmMap[] = {
+        "B-Auton1", "B-Auton2", "B-Auton3", "\n",
+        "B-Auton4", "B-Auton5", "B-Auton6", nullptr
+    };
+    static const char* blueBtnmDesc[] = {
+        "R-Auton1", "R-Auton2", "R-Auton3",
+        "R-Auton4", "R-Auton5", "R-Auton6", nullptr
+    };
+
+    static const char* skillsBtnmMap[] = {
+        "Auton", "Preload", "Skills 1", "\n",  
+        "Skills 2", "Skills 3", "Skills 4", nullptr
+    };
+    static const char* skillsBtnmDesc[] = {
+        "Auton", "Preload", "Skills 1",  
+        "Skills 2", "Skills 3", "Skills 4", nullptr
+    };
+
+    lemlib::selector::init(1, redBtnmMap, blueBtnmMap, skillsBtnmMap, redBtnmDesc, blueBtnmDesc, skillsBtnmDesc); // declaring default auton
 
     // TODO - temporary 
     pros::Task watcher(autonwatcher);
@@ -102,26 +175,49 @@ void disabled() {} // @note -> Potentially for selecting clsrt (dont trust me br
 
 void competition_initialize() {}
 
+
 void autonomous() {  
     chassis.setPose(0, 0, 0); 
 
-    switch (lemlib::selector::auton) {
-        case 1:
-            RedLeft(); //runs red side red left code
-            break;
-        case 2:
-            RedRight(); //runs red side autonomous 2 code
-            break;
-        case -1:
-            BlueLeft(); //runs blue side autonomous 1 code
-            break;
-        case -2:
-            BlueRight(); //runs blue side autonomous 2 code
-            break;
-        case 0:
-            Skills(); //runs skills autonomous code
-            break;
-  }
+    int auton = lemlib::selector::auton;
+    
+    if (auton >= 1 && auton <= 100) {
+        switch (auton) {
+            case 1: red1(); break;
+            case 2: red2(); break;
+            case 3: red3(); break;
+            case 4: red4(); break;
+            case 5: red5(); break;
+            case 6: red6(); break;
+            // add more red cases as needed up to 100
+        }
+    }
+    else if (auton >= -100 && auton <= -1) {
+        switch (auton) {
+            case -1: blue1(); break;
+            case -2: blue2(); break;
+            case -3: blue3(); break;
+            case -4: blue4(); break;
+            case -5: blue5(); break;
+            case -6: blue6(); break;
+            // add more blue cases as needed up to -100
+        }
+    }
+    else if (auton >= 101 && auton <= 201) {
+        switch (auton) {
+            case 101: skills1(); break;
+            case 102: skills2(); break;
+            case 103: skills3(); break;
+            case 104: skills4(); break;
+            case 105: skills5(); break;
+            case 106: skills6(); break;
+            // add more skills cases as needed up to 106
+        }
+    }
+    else {
+        // Default auton
+        auton1ring();
+    }
 }
 
 void opcontrol() {

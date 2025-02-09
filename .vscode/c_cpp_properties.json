@@ -5,7 +5,8 @@
       "includePath": [
         "${workspaceFolder}/**",
         "/Users/cai_ya/Documents/GitHub/1831-Common-Codebase/include",
-        "/Users/arona/Documents/GitHub/1831-Common-Codebase/include"
+        "/Users/arona/Documents/GitHub/1831-Common-Codebase/include",
+        "/Users/fang_ha/Documents/GitHub/1831-CC-Selector-V1.1/include"
       ],
       "defines": [
         "_DEBUG",

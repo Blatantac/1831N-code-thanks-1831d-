@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "Main Scattfold",
-      "icon": "X",
+      "description": "Main ~~Scattfold~~ Schlattfold",
+      "icon": "power",
       "slot": 1
     },
     "use_early_access": false
