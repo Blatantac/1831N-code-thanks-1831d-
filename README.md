@@ -4,7 +4,7 @@ Welcome Adventurer! This repository is a merged effort between programmers of ac
 
 With this project, we are aiming to extend upon the existing LemLib project by @SizzinSeal and its contributors, optimising it for the "high stakes" season. 
 
-If you decide to use our code, please consider **starring our project** to support us!
+If you decide to use our code, please consider **starring our project** (and lemlib) to support us!
 
 ---
 
@@ -112,3 +112,5 @@ Cheers! 🍻
 Alex Cai (LycoKodo) - Programmer of 1831E
 
 Haoran Fang (venus-beetroot) - Programmer of 1831A
+
+Carlos Zhang (blatantac) - Independent programmer from 1831N
