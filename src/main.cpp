@@ -142,31 +142,6 @@ void initialize() {
     // TODO - temporary 
     pros::Task watcher(autonwatcher);
 
-    // TODO - Add Color sort selector in compatiable with Selector
-    // TODO - Add Lemlib XYT tracking into LVGL, with also temp sensors
-
-        // Selecting Alliance Color
-        // pros::lcd::register_btn1_cb(setColorSort);
-        // pros::lcd::print(3, "[!] ALLIANCE NOT SELECTED, (MID BTN)");
-
-        // -----------------------
-        // @removed - LLEMU CANNOT BE USED WITH LVGL | Start Screen Task
-        // -----------------------
-        // pros::Task screenTask([]() {
-        //     while (true) {
-        //         pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-        //         pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-        //         pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-        //         pros::lcd::print(4, "Lady Pos: %ld", lady_rotation.get_position());
-
-        //         // master.clear_line(0);
-        //         // master.set_text(0, 0, "ALS: " + alliance);
-
-        //         lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
-        //         pros::delay(50);
-        //     }
-        // });
-
 }
 
 

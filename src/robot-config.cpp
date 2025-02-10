@@ -14,6 +14,16 @@
 // Drivetrain & Chassis
 // ---------------------------------------
 
+// Left chassis Motors
+pros::Motor left1({-2}, pros::MotorGearset::blue);
+pros::Motor left2({-3}, pros::MotorGearset::blue);
+pros::Motor left3({-7}, pros::MotorGearset::blue);
+
+// Right chassis Motors
+pros::Motor right1({8}, pros::MotorGearset::blue);
+pros::Motor right2({9}, pros::MotorGearset::blue);
+pros::Motor right3({10}, pros::MotorGearset::blue);
+
 pros::MotorGroup leftMotors({-2, -3, -7}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
 pros::MotorGroup rightMotors({8, 9, 10}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
 
