@@ -78,7 +78,26 @@ void Intake_SortedMove(int voltage, float msDelay, int penaltyFactor, bool async
 }
 
 void autonColorSort() {}
+    double blue = color.get_rgb().blue;
+    double red = color.get_rgb().red;
+    double green = color.get_rgb().green;
+    int RED_MIN = 300;
+    int BLUE_MIN = 150;
+    int GREEN_MAX = 100;
 
+
+    if(blue>BLUE_MIN) {
+
+        pros::c::delay(50);
+        intake.move(0);
+        pros::c::delay(500);
+    }
+
+    else if (red > RED_MIN) {
+
+        master.rumble("."); //Check if red is working
+    }
 void driverColorSort() {}
-
+    
 void ColorSortAlg() {}
+    
