@@ -78,7 +78,7 @@ void Intake_SortedMove(int voltage, float msDelay, int penaltyFactor, bool async
 }
 
 void autonColorSort() {}
-    double blue = color.get_rgb().blue;
+    double blue = color.get_rgb().blue; //color is not defined (you have to configure your optical sensor basically and name it color)
     double red = color.get_rgb().red;
     double green = color.get_rgb().green;
     int RED_MIN = 300;
