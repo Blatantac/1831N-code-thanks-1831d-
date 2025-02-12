@@ -4,7 +4,7 @@
 #include "controls.hpp"
 #include "lemlib/selector.hpp"
 #include "lemlib/smartMotor.hpp"
-
+#include "lemlib/chassis/chassis.hpp"
 
 
 // ------------------------- //

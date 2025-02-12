@@ -7,7 +7,8 @@
         "/Users/cai_ya/Documents/GitHub/1831-Common-Codebase/include",
         "/Users/arona/Documents/GitHub/1831-Common-Codebase/include",
         "/Users/fang_ha/Documents/GitHub/1831-CC-Selector-V1.1/include",
-        "/Users/fang_ha/Documents/GitHub/1831-Common-Codebase/include"
+        "/Users/fang_ha/Documents/GitHub/1831-Common-Codebase/include",
+        "/Users/fang_ha/Documents/GitHub/FEATURE-Selector-Testing/include"
       ],
       "defines": [
         "_DEBUG",
@@ -23,7 +24,7 @@
       ],
       "browse": {
         "path": [
-          "/Users/fang_ha/Documents/GitHub/1831-Common-Codebase"
+          "/Users/fang_ha/Documents/GitHub/FEATURE-Selector-Testing"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""

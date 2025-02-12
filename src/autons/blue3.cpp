@@ -4,6 +4,7 @@
 #include "controls.hpp"
 #include "lemlib/selector.hpp"
 #include "lemlib/smartMotor.hpp"
+#include "lemlib/chassis/chassis.hpp"
 
 
 
@@ -15,6 +16,11 @@
 
 int blue3() {
     
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPose(0, 0, 0, 10000, {}, true);
+    pros::delay(5000);
+    chassis.turnToHeading(359, 100000);
+
     return 0;
 }
 

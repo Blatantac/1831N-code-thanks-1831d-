@@ -14,26 +14,19 @@
 // Drivetrain & Chassis
 // ---------------------------------------
 
-// Left chassis Motors
-pros::Motor left1({-2}, pros::MotorGearset::blue);
-pros::Motor left2({-3}, pros::MotorGearset::blue);
-pros::Motor left3({-7}, pros::MotorGearset::blue);
 
-// Right chassis Motors
-pros::Motor right1({8}, pros::MotorGearset::blue);
-pros::Motor right2({9}, pros::MotorGearset::blue);
-pros::Motor right3({10}, pros::MotorGearset::blue);
+// CLAWBOT CONFIGS
 
-pros::MotorGroup leftMotors({-2, -3, -7}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({8, 9, 10}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+pros::MotorGroup leftMotors({10}, pros::MotorGearset::green); // left motor group - ports 3 (reversed), 4, 5 (reversed)
+pros::MotorGroup rightMotors({-1}, pros::MotorGearset::green); // right motor group - ports 6, 7, 9 (reversed)
 
 // PID settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              12.8, // 11.6 inch track width
-                              lemlib::Omniwheel::NEW_325, // using new 3"25' omnis
-                              450, // drivetrain rpm is 200 (green direct)
-                              8 // horizontal drift is 2. If we had traction wheels, it would have been 8
+                              11.6, // 11.6 inch track width
+                              lemlib::Omniwheel::OLD_325, // using new 3"25' omnis
+                              200, // drivetrain rpm is 200 (green direct)
+                              5 // horizontal drift is 2. If we had traction wheels, it would have been 8
 );
 
 // ---------------------------------------
@@ -42,50 +35,50 @@ lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-pros::Motor roller(1);
-pros::Motor hook(-6);
+pros::Motor roller(3);
+pros::Motor hook(8);
 
-pros::MotorGroup intake({1, -6}, pros::MotorGearset::green); // front 1, back 6
-pros::adi::DigitalOut mogo_mech (8);
-pros::adi::DigitalOut doinker (7);
-pros::adi::DigitalOut endgame (1);
+// pros::MotorGroup intake({1, -6}, pros::MotorGearset::green); // front 1, back 6
+// pros::adi::DigitalOut mogo_mech (8);
+// pros::adi::DigitalOut doinker (7);
+// pros::adi::DigitalOut endgame (1);
 
 // ---------------------------------------
 // Sensors (Miscellaneous)
 // ---------------------------------------
 
-pros::Imu imu(11);
-pros::Optical colorSort (18);
+// pros::Imu imu(11);
+// pros::Optical colorSort (18);
 
 // ---------------------------------------
 // Macro (Wall Stake Mech)
 // ---------------------------------------
 
-pros::MotorGroup lady({5});
-lemlib::PID ladypid(10, 0.4, 50, 0, false);
-pros::Rotation lady_rotation (12);
-lemlib::SmartMotor ladySmart(&lady, &lady_rotation, ladypid);
+// pros::MotorGroup lady({5});
+// lemlib::PID ladypid(10, 0.4, 50, 0, false);
+// pros::Rotation lady_rotation (12);
+// lemlib::SmartMotor ladySmart(&lady, &lady_rotation, ladypid);
 
 // ---------------------------------------
 // Odometry
 // ---------------------------------------
 
-pros::Rotation horizontal_encoder(13); // Change to the "A" tagged encoder
+// pros::Rotation horizontal_encoder(13); // Change to the "A" tagged encoder
 
-pros::Rotation vertical_encoder(17);
+// pros::Rotation vertical_encoder(17);
 
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, +1.95);
+// lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, +1.95);
 
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -1.5);
+// lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -1.5);
 
 // chassis: 12.8 across, 13.5 height
 // traking cneter: 6.4, 6.75 
 
-lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel
+lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel
                             nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
-                            &horizontal_tracking_wheel, // &horizontal_tracking_wheel
+                            nullptr, // &horizontal_tracking_wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
-                            &imu     // inertial sensor &imu
+                            nullptr     // inertial sensor &imu
 );
 
 // ---------------------------------------

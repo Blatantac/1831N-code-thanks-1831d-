@@ -1,4 +1,4 @@
-bin/controls.cpp.o: src/controls.cpp include/main.h include/api.h \
+bin/colorsort.cpp.o: src/colorsort.cpp include/main.h include/api.h \
  include/pros/adi.h include/pros/colors.h include/pros/device.h \
  include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
  include/pros/adi.h include/pros/adi.h include/pros/gps.h \
@@ -141,7 +141,7 @@ bin/controls.cpp.o: src/controls.cpp include/main.h include/api.h \
  include/fmt/args.h include/lemlib/logger/message.hpp \
  include/lemlib/logger/infoSink.hpp \
  include/lemlib/logger/telemetrySink.hpp include/lemlib/smartMotor.hpp \
- include/robot-config.hpp include/main.h include/colorsort.hpp
+ include/controls.hpp include/main.h include/robot-config.hpp
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -380,6 +380,6 @@ include/lemlib/logger/message.hpp:
 include/lemlib/logger/infoSink.hpp:
 include/lemlib/logger/telemetrySink.hpp:
 include/lemlib/smartMotor.hpp:
-include/robot-config.hpp:
+include/controls.hpp:
 include/main.h:
-include/colorsort.hpp:
+include/robot-config.hpp:
