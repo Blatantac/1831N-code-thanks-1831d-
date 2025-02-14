@@ -113,3 +113,5 @@ Alex Cai (LycoKodo) - Programmer of 1831E
 Haoran Fang (venus-beetroot) - Programmer of 1831A
 
 Carlos Zhang (blatantac) - Independent programmer from 1831N
+
+Sky Fan (Skiiboi) - Programmer/Project Manager of 1831D
