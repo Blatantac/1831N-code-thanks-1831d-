@@ -155,6 +155,8 @@ void autonomous() {
     chassis.setPose(0, 0, 0); 
 
     int auton = lemlib::selector::auton;
+
+    lemlib::selector::autonStarted = true;
     
     if (auton >= 1 && auton <= 100) {
         switch (auton) {
@@ -193,6 +195,8 @@ void autonomous() {
         // Default auton
         auton1ring();
     }
+
+
 }
 
 void opcontrol() {

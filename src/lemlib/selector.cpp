@@ -12,6 +12,7 @@
 #include "liblvgl/misc/lv_types.h"
 #include "liblvgl/widgets/lv_btnmatrix.h"
 #include "liblvgl/widgets/lv_textarea.h"
+#include "pros/rtos.hpp"
 
 #include "robot-config.hpp"
 
@@ -45,6 +46,8 @@ int auton;
 int blueLength;
 int redLength;
 int skillsLength;
+
+bool autonStarted = false;
 
 uint16_t currentRedButton = UINT16_MAX; // button IDs for buttons selected rn
 uint16_t currentBlueButton = UINT16_MAX;
@@ -207,7 +210,7 @@ void skillsBtnmAction(lv_event_t* e) {
 void tabWatcher(void* param) {
     try {
         int activeTab = lv_tabview_get_tab_act(tabview);
-        while (1) {
+        while (!autonStarted) {
             int currentTab = lv_tabview_get_tab_act(tabview);
             if (currentTab != activeTab) {
                 activeTab = currentTab;
@@ -227,6 +230,16 @@ void tabWatcher(void* param) {
                 odomUpdate();
             }
             textUpdate();
+            printf("Current Auton %i", auton);
+            pros::delay(10);
+        }
+
+        // Auton has started
+        while (autonStarted) {
+            lv_tabview_set_act(tabview, 0, LV_ANIM_OFF);
+            motorUpdate();
+            odomUpdate();
+            
             printf("Current Auton %i", auton);
             pros::delay(10);
         }
@@ -502,32 +515,32 @@ int motorUpdate() {
     // @LycoKodo in the worst case we remove lady cuz intake can sometimes get hot as well, and replace lady temp with hottest motor
     // @LycoKodo wdyt? 
 
-    // try {
-    //     double current = intake.get_temperature();
-    //     if (current == PROS_ERR_F) {
-    //         lv_textarea_add_text(motor_temps_textarea, "Intake: ERROR (PROS)\n");
-    //     } else {
-    //         snprintf(buffer, sizeof(buffer), "Intake: %d\n", static_cast<int>(current));
-    //         lv_textarea_add_text(motor_temps_textarea, buffer);
-    //     }
-    // } catch (std::out_of_range&) {
-    //     lv_textarea_add_text(motor_temps_textarea, "Intake: ERROR (OOR)\n");
-    //     ret = 1;
-    // }
+    try {
+        double current = intake.get_temperature();
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "Intake: ERROR (PROS)\n");
+        } else {
+            snprintf(buffer, sizeof(buffer), "Intake: %d\n", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "Intake: ERROR (OOR)\n");
+        ret = 1;
+    }
 
     // Note: IMO this is not rlly needed as in a tournament in a rush you will NOT prioritise cooling lady brown motor
-    // try {
-    //     double current = lady.get_temperature();
-    //     if (current == PROS_ERR_F) {
-    //         lv_textarea_add_text(motor_temps_textarea, "WallMech: ERROR (PROS)");
-    //     } else {
-    //         snprintf(buffer, sizeof(buffer), "WallMech: %d", static_cast<int>(current));
-    //         lv_textarea_add_text(motor_temps_textarea, buffer);
-    //     }
-    // } catch (std::out_of_range&) {
-    //     lv_textarea_add_text(motor_temps_textarea, "WallMech: ERROR (OOR)");
-    //     ret = 1;
-    // }
+    try {
+        double current = lady.get_temperature();
+        if (current == PROS_ERR_F) {
+            lv_textarea_add_text(motor_temps_textarea, "WallMech: ERROR (PROS)");
+        } else {
+            snprintf(buffer, sizeof(buffer), "WallMech: %d", static_cast<int>(current));
+            lv_textarea_add_text(motor_temps_textarea, buffer);
+        }
+    } catch (std::out_of_range&) {
+        lv_textarea_add_text(motor_temps_textarea, "WallMech: ERROR (OOR)");
+        ret = 1;
+    }
 
     return ret;
 }

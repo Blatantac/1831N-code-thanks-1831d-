@@ -38,26 +38,26 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Motor roller(3);
 pros::Motor hook(8);
 
-// pros::MotorGroup intake({1, -6}, pros::MotorGearset::green); // front 1, back 6
-// pros::adi::DigitalOut mogo_mech (8);
-// pros::adi::DigitalOut doinker (7);
-// pros::adi::DigitalOut endgame (1);
+pros::MotorGroup intake({1, -6}, pros::MotorGearset::green); // front 1, back 6
+pros::adi::DigitalOut mogo_mech (8);
+pros::adi::DigitalOut doinker (7);
+pros::adi::DigitalOut endgame (1);
 
 // ---------------------------------------
 // Sensors (Miscellaneous)
 // ---------------------------------------
 
-// pros::Imu imu(11);
-// pros::Optical colorSort (18);
+pros::Imu imu(19);
+pros::Optical colorSort (18);
 
 // ---------------------------------------
 // Macro (Wall Stake Mech)
 // ---------------------------------------
 
-// pros::MotorGroup lady({5});
-// lemlib::PID ladypid(10, 0.4, 50, 0, false);
-// pros::Rotation lady_rotation (12);
-// lemlib::SmartMotor ladySmart(&lady, &lady_rotation, ladypid);
+pros::MotorGroup lady({5});
+lemlib::PID ladypid(10, 0.4, 50, 0, false);
+pros::Rotation lady_rotation (12);
+lemlib::SmartMotor ladySmart(&lady, &lady_rotation, ladypid);
 
 // ---------------------------------------
 // Odometry

@@ -17,9 +17,6 @@
 int red1() {
     
     chassis.setPose(0, 0, 0);
-    chassis.moveToPose(-24, 0, 0, 10000, {}, true);
-    pros::delay(5000);
-    chassis.turnToHeading(90, 100000);
 
     return 0;
 }

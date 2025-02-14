@@ -28,6 +28,8 @@ extern AutonState autonState;
 extern int auton;
 extern int autonCount;
 
+extern int autonStarted;
+
 extern uint16_t currentRedButton;
 extern uint16_t currentBlueButton;
 
