@@ -12,6 +12,7 @@
 #include "liblvgl/misc/lv_types.h"
 #include "liblvgl/widgets/lv_btnmatrix.h"
 #include "liblvgl/widgets/lv_textarea.h"
+#include "pros/rtos.hpp"
 
 #include "robot-config.hpp"
 
@@ -45,6 +46,8 @@ int auton;
 int blueLength;
 int redLength;
 int skillsLength;
+
+bool autonStarted = false;
 
 uint16_t currentRedButton = UINT16_MAX; // button IDs for buttons selected rn
 uint16_t currentBlueButton = UINT16_MAX;
@@ -207,7 +210,7 @@ void skillsBtnmAction(lv_event_t* e) {
 void tabWatcher(void* param) {
     try {
         int activeTab = lv_tabview_get_tab_act(tabview);
-        while (1) {
+        while (!autonStarted) {
             int currentTab = lv_tabview_get_tab_act(tabview);
             if (currentTab != activeTab) {
                 activeTab = currentTab;
@@ -227,6 +230,16 @@ void tabWatcher(void* param) {
                 odomUpdate();
             }
             textUpdate();
+            printf("Current Auton %i", auton);
+            pros::delay(10);
+        }
+
+        // Auton has started
+        while (autonStarted) {
+            lv_tabview_set_act(tabview, 0, LV_ANIM_OFF);
+            motorUpdate();
+            odomUpdate();
+            
             printf("Current Auton %i", auton);
             pros::delay(10);
         }

@@ -90,18 +90,18 @@ void initialize() {
 
     chassis.calibrate(); // calibrate sensors
 
-    // -----------------------
-    // Initialise Sensors
-    // -----------------------
-    colorSort.set_led_pwm(100);
-    lady_rotation.set_position(0);
+    // // -----------------------
+    // // Initialise Sensors
+    // // -----------------------
+    // colorSort.set_led_pwm(100);
+    // lady_rotation.set_position(0);
 
-    // -----------------------
-    // Initialise Subsystems
-    // -----------------------
-    intake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    mogo_mech.set_value(true);
-    doinker.set_value(false);
+    // // -----------------------
+    // // Initialise Subsystems
+    // // -----------------------
+    // intake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    // mogo_mech.set_value(true);
+    // doinker.set_value(false);
 
     lv_obj_del(img); // stop displaying TKSRC Logo as Calibration has ended
 
@@ -155,6 +155,8 @@ void autonomous() {
     chassis.setPose(0, 0, 0); 
 
     int auton = lemlib::selector::auton;
+
+    lemlib::selector::autonStarted = true;
     
     if (auton >= 1 && auton <= 100) {
         switch (auton) {
@@ -193,17 +195,19 @@ void autonomous() {
         // Default auton
         auton1ring();
     }
+
+
 }
 
 void opcontrol() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    // intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     // DON'T CHANGE!: Multi-treading for robot controls (To prevent color sort interruption)
-    pros::Task intakeTask(intake_control); // Interrupted by color sort
-    pros::Task mogoTask(mogo_control);
+    // pros::Task intakeTask(intake_control); // Interrupted by color sort
+    // pros::Task mogoTask(mogo_control);
     pros::Task driveTask(drivetrain_control);
-    pros::Task ladyTask(ladyctl);
-    pros::Task doinkerTask(doinker_control);
-    pros::Task endgameTask(endgame_control);
+    // pros::Task ladyTask(ladyctl);
+    // pros::Task doinkerTask(doinker_control);
+    // pros::Task endgameTask(endgame_control);
 }
