@@ -17,8 +17,8 @@
 
 // CLAWBOT CONFIGS
 
-pros::MotorGroup leftMotors({10}, pros::MotorGearset::green); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({-1}, pros::MotorGearset::green); // right motor group - ports 6, 7, 9 (reversed)
+pros::MotorGroup leftMotors({10}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
+pros::MotorGroup rightMotors({-1}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
 
 // PID settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
@@ -63,13 +63,13 @@ lemlib::SmartMotor ladySmart(&lady, &lady_rotation, ladypid);
 // Odometry
 // ---------------------------------------
 
-// pros::Rotation horizontal_encoder(13); // Change to the "A" tagged encoder
+pros::Rotation horizontal_encoder(13); // Change to the "A" tagged encoder
 
-// pros::Rotation vertical_encoder(17);
+pros::Rotation vertical_encoder(17);
 
-// lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, +1.95);
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, +1.95);
 
-// lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -1.5);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -1.5);
 
 // chassis: 12.8 across, 13.5 height
 // traking cneter: 6.4, 6.75 
