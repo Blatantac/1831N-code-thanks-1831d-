@@ -23,8 +23,8 @@ LV_IMG_DECLARE(dorito); //TKSRC Logo
  * [√] - TODO - Make different btnmtrx for different tabs, rn its just standard, and make it in main
  * [√] - TODO - LOW PRIORITY - (in main.cpp) put in all cases of auton (RED AND BLUE 1-6) for caseswitch
  * [√] - TODO - LOW PRIORITY - (in main.cpp) add a case for the "Skills" tab
- * [] - TODO - Lock to dev tab once an auton is selected
- * [] - TODO - (colorsort): refractor a colorsort file with all colorsort routines in auton, driver and normal alg iykwis
+ * [√] - TODO - Lock to dev tab once an auton is selected
+ * [√] - TODO - (colorsort): refractor a colorsort file with all colorsort routines in auton, driver and normal alg iykwis
  */
 
 namespace lemlib::selector {
