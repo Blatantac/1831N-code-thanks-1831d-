@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "1831 Common Codebase",
+    "project_name": "1831N",
     "target": "v5",
     "templates": {
       "LemLib": {

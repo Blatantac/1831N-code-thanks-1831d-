@@ -1,0 +1,7 @@
+// Path
+
+forward(42.88, 30);
+turnTo(42.546, 30);
+
+
+#PATH.JERRYIO-DATA {"appVersion":"0.10.0","format":"Rigid Code Gen v0.1","gc":{"robotWidth":34,"robotHeight":45,"showRobot":true,"uol":1,"pointDensity":2,"controlMagnetDistance":0.5,"fieldImage":{"displayName":"V5RC 2026 - Push Back","signature":"V5RC-PushBack-H2H-TopDownHighlighted-TileColor66_71","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System","headingOutputType":"Absolute Heading","outputTemplate":"path: `// ${name}\n\n${code}\n`\nforward: `forward(${distance}, ${speed});`\nbackward: `backward(${distance}, ${speed});`\nturnLeft: `turnLeft(${heading}, ${speed});`\nturnRight: `turnRight(${heading}, ${speed});`\nturnTo: `turnTo(${heading}, ${speed});`"},"paths":[{"segments":[{"controls":[{"uid":"jEYePyKv3H","x":-57.87736566214528,"y":-59.17591965559419,"lock":false,"visible":true,"heading":44.11859600341788,"__type":"end-point"},{"uid":"cU7CdDRCG8","x":-28.026881722122255,"y":-28.39260809244547,"lock":false,"visible":true,"heading":42.5459683254729,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"sjQNXKVkkk"}],"pc":{"speed":30},"name":"Path","uid":"IbZzxFxeXl","lock":false,"visible":true}]}
